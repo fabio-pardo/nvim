@@ -14,8 +14,24 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-local plugins = require("plugins.init")
-require("lazy").setup(plugins, opts)
+require('lazy').setup('plugins', {
+  defaults = { lazy = true },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        'gzip',
+        'matchit',
+        'matchparen',
+        'netrwPlugin',
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
+      },
+    },
+  },
+})
 
-vim.o.background = "dark" -- or "light" for light mode
-vim.cmd([[colorscheme gruvbox]])
+require('impatient')
+require('config.options')
+require('config.keymaps')
