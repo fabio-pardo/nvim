@@ -1,3 +1,4 @@
+local vim = vim
 vim.g.tmux_navigator_no_mappings = 1
 
 vim.api.nvim_set_keymap('n', '{Left-Mapping}', ':<C-U>TmuxNavigateLeft<cr>', { silent = true })
