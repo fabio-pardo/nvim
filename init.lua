@@ -16,25 +16,25 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup('plugins', {
+require("lazy").setup("plugins", {
   defaults = { lazy = true },
   performance = {
     rtp = {
       disabled_plugins = {
-        'gzip',
-        'matchit',
-        'matchparen',
-        'netrwPlugin',
-        'tarPlugin',
-        'tohtml',
-        'tutor',
-        'zipPlugin',
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
       },
     },
   },
 })
 
-require('impatient')
-require('config.options')
-require('config.keymaps')
-require('config.lsp')
+require("impatient")
+require("config.options")
+require("config.keymaps")
+require("config.lsp")
