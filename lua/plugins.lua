@@ -13,7 +13,14 @@ return {
     build = ":TSUpdate",
     event = "VeryLazy",
     config = function()
-      require "config.treesitter"
+      require "config.plugins.treesitter"
     end,
+  },
+  {
+    "williamboman/mason.nvim",
+    dependencies = {
+      "williamboman/mason-lspconfig.nvim",
+      "neovim/nvim-lspconfig",
+    },
   },
 }
