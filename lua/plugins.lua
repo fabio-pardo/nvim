@@ -16,11 +16,14 @@ return {
       require "config.plugins.treesitter"
     end,
   },
-  {
-    "williamboman/mason.nvim",
+  { "neovim/nvim-lspconfig", 		   -- LSP configurations
+    lazy = false,
     dependencies = {
-      "williamboman/mason-lspconfig.nvim",
-      "neovim/nvim-lspconfig",
-    },
+      "williamboman/mason.nvim",  	   -- Installer for external tools
+      "williamboman/mason-lspconfig.nvim", -- mason extension for lspconfig
+      "hrsh7th/nvim-cmp",                  -- Autocomplete engine
+      "hrsh7th/cmp-nvim-lsp",              -- Completion source for LSP
+      "L3MON4D3/LuaSnip",                  -- Snippet engine
+    }
   },
 }
