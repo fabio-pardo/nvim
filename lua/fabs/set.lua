@@ -1,6 +1,9 @@
 local vim = vim
 local opt = vim.opt
 
+vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
+vim.g.maplocalleader = " "
+
 vim.cmd([[colorscheme gruvbox]]) -- Colorscheme GRUVBOX
 
 opt.autowrite = true -- Enable auto write
