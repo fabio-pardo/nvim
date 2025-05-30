@@ -22,8 +22,13 @@ local function list_marks()
   local snacks = require("snacks")
   return snacks.picker.marks({
     transform = function(item)
-      if item.label and item.label:match("^[A-I]$") and item then
+      -- Show numbered marks (A-I mapped to 1-9)
+      if item.label and item.label:match("^[A-I]$") then
         item.label = "" .. string.byte(item.label) - string.byte("A") + 1 .. ""
+        return item
+      end
+      -- Also show buffer-local marks (a-z)
+      if item.label and item.label:match("^[a-z]$") then
         return item
       end
       return false
@@ -63,11 +68,20 @@ end, { desc = "List marks" })
 -- Delete Marks ---------------------------------------------------------------
 vim.keymap.set("n", "<Leader>md", function()
   local mark = vim.fn.getcharstr()
-  vim.api.nvim_del_mark(mark2char(mark))
-  vim.notify("Deleted mark " .. mark, vim.log.levels.INFO, { title = "Marks" })
+  -- Handle numbered marks (1-9) and lowercase marks (a-z)
+  if mark:match("[1-9]") then
+    vim.api.nvim_del_mark(mark2char(mark))
+    vim.notify("Deleted mark " .. mark, vim.log.levels.INFO, { title = "Marks" })
+  elseif mark:match("[a-z]") then
+    vim.cmd("delmark " .. mark)
+    vim.notify("Deleted mark " .. mark, vim.log.levels.INFO, { title = "Marks" })
+  else
+    vim.notify("Invalid mark: " .. mark, vim.log.levels.WARN, { title = "Marks" })
+  end
 end, { desc = "Delete mark" })
 
 vim.keymap.set("n", "<Leader>mD", function()
   vim.cmd("delmarks A-I")
+  vim.cmd("delmarks a-z")
   vim.notify("Deleted all marks", vim.log.levels.INFO, { title = "Marks" })
 end, { desc = "Delete all marks" })
