@@ -1,7 +1,25 @@
-local adapter = "anthropic"
+local mapping_key_prefix = vim.g.ai_prefix_key or "<leader>a"
+
+local PROMPTS = require("plugins.code-companion.prompts")
+
+local adapter = "copilot"
+
 return {
   "olimorris/codecompanion.nvim",
   dependencies = {
+    {
+      "folke/which-key.nvim",
+      optional = true,
+      opts = {
+        spec = {
+          { mapping_key_prefix, group = "AI Code Companion", mode = { "n", "v" } },
+        },
+      },
+    },
+    {
+      "nvim-treesitter/nvim-treesitter",
+      opts = { ensure_installed = { "yaml", "markdown" } },
+    },
     {
       "echasnovski/mini.diff",
       config = function()
@@ -9,6 +27,29 @@ return {
         diff.setup({
           -- Disabled by default
           source = diff.gen_source.none(),
+        })
+      end,
+    },
+    -- {
+    --   "MeanderingProgrammer/render-markdown.nvim",
+    --   ft = { "markdown", "codecompanion" },
+    --   opts = {
+    --     render_modes = true, -- Render in ALL modes
+    --     sign = {
+    --       enabled = false, -- Turn off in the status column
+    --     },
+    --   },
+    -- },
+    {
+      "folke/edgy.nvim",
+      optional = true,
+      opts = function(_, opts)
+        opts.animate = { enabled = false }
+        opts.right = opts.right or {}
+        table.insert(opts.right, {
+          ft = "codecompanion",
+          title = "Companion Chat",
+          size = { width = 70 },
         })
       end,
     },
@@ -30,7 +71,6 @@ return {
       },
     },
     "ravitemer/codecompanion-history.nvim", -- Save and load conversation history
-    "nvim-treesitter/nvim-treesitter",
     {
       "ravitemer/mcphub.nvim",
       cmd = "MCPHub",
@@ -62,8 +102,6 @@ return {
         },
       },
     },
-    -- { "echasnovski/mini.pick", config = true },
-    -- { "ibhagwan/fzf-lua", config = true },
   },
   opts = {
     adapters = {
@@ -74,107 +112,15 @@ return {
           },
         })
       end,
-    },
-    prompt_library = {
-      ["Test workflow"] = {
-        strategy = "workflow",
-        description = "Use a workflow to test the plugin",
-        opts = {
-          index = 4,
-        },
-        prompts = {
-          {
-            {
-              role = "user",
-              content = "Generate a Python class for managing a book library with methods for adding, removing, and searching books",
-              opts = {
-                auto_submit = false,
-              },
+      copilot = function()
+        return require("codecompanion.adapters").extend("copilot", {
+          schema = {
+            model = {
+              default = "claude-sonnet-4",
             },
           },
-          {
-            {
-              role = "user",
-              content = "Write unit tests for the library class you just created",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Create a TypeScript interface for a complex e-commerce shopping cart system",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Write a recursive algorithm to balance a binary search tree in Java",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Generate a comprehensive regex pattern to validate email addresses with explanations",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Create a Rust struct and implementation for a thread-safe message queue",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Write a GitHub Actions workflow file for CI/CD with multiple stages",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Create SQL queries for a complex database schema with joins across 4 tables",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Write a Lua configuration for Neovim with custom keybindings and plugins",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-          {
-            {
-              role = "user",
-              content = "Generate documentation in JSDoc format for a complex JavaScript API client",
-              opts = {
-                auto_submit = true,
-              },
-            },
-          },
-        },
-      },
+        })
+      end,
     },
     strategies = {
       chat = {
@@ -193,92 +139,70 @@ return {
           pinned_buffer = " ",
           watched_buffer = "👀 ",
         },
-        -- Alter the sizing of the debug window
-        debug_window = {
-          ---@return number|fun(): number
-          width = vim.o.columns - 5,
-          ---@return number|fun(): number
-          height = vim.o.lines - 2,
-        },
-        -- Options to customize the UI of the chat buffer
-        window = {
-          layout = "vertical", -- float|vertical|horizontal|buffer
-          position = nil, -- left|right|top|bottom (nil will default depending on vim.opt.splitright|vim.opt.splitbelow)
-          border = "single",
-          height = 0.8,
-          width = 0.45,
-          relative = "editor",
-          full_height = true, -- when set to false, vsplit will be used to open the chat buffer vs. botright/topleft vsplit
-          opts = {
-            breakindent = true,
-            cursorcolumn = false,
-            cursorline = false,
-            foldcolumn = "0",
-            linebreak = true,
-            list = false,
-            numberwidth = 1,
-            signcolumn = "no",
-            spell = false,
-            wrap = true,
-          },
-          keymaps = {
-            send = {
-              modes = { n = "<C-s>", i = "<C-s>" },
-            },
-            close = {
-              modes = { n = "<Esc>", i = "<Esc>" },
-            },
-            completion = {
+        slash_commands = {
+          ["buffer"] = {
+            keymaps = {
               modes = {
-                i = "<C-x>",
+                i = "<C-b>",
               },
             },
           },
-          slash_commands = {
-            ["buffer"] = {
-              keymaps = {
-                modes = {
-                  i = "<C-b>",
-                },
-              },
-            },
-            ["fetch"] = {
-              keymaps = {
-                modes = {
-                  i = "<C-f>",
-                },
-              },
-            },
-            ["help"] = {
-              opts = {
-                max_lines = 1000,
-              },
-            },
-            ["image"] = {
-              keymaps = {
-                modes = {
-                  i = "<C-i>",
-                },
-              },
-              opts = {
-                dirs = { "~/Documents/Screenshots" },
+          ["fetch"] = {
+            keymaps = {
+              modes = {
+                i = "<C-f>",
               },
             },
           },
-          tools = {
+          ["help"] = {
             opts = {
-              auto_submit_success = false,
-              auto_submit_errors = false,
+              max_lines = 1000,
             },
           },
-          ---Customize how tokens are displayed
-          ---@param tokens number
-          ---@param adapter CodeCompanion.Adapter
-          ---@return string
-          token_count = function(tokens, adapter)
-            return " (" .. tokens .. " tokens)"
-          end,
+          ["image"] = {
+            keymaps = {
+              modes = {
+                i = "<C-i>",
+              },
+            },
+            opts = {
+              dirs = { "~/Documents/Screenshots" },
+            },
+          },
         },
+        keymaps = {
+          send = {
+            callback = function(chat)
+              vim.cmd("stopinsert")
+              chat:submit()
+            end,
+            index = 1,
+            description = "Send",
+          },
+          close = {
+            modes = {
+              n = "q",
+            },
+            index = 3,
+            callback = "keymaps.close",
+            description = "Close Chat",
+          },
+          stop = {
+            modes = {
+              n = "<C-c>",
+            },
+            index = 4,
+            callback = "keymaps.stop",
+            description = "Stop Request",
+          },
+        },
+        -- -- Alter the sizing of the debug window
+        -- debug_window = {
+        --   ---@return number|fun(): number
+        --   width = vim.o.columns - 5,
+        --   ---@return number|fun(): number
+        --   height = vim.o.lines - 2,
+        -- },
       },
       inline = {
         adapter = adapter,
@@ -286,11 +210,14 @@ return {
       cmd = {
         adapter = adapter,
       },
+      agent = {
+        adapter = adapter,
+      },
+    },
+    inline = {
+      layout = "buffer", -- vertical|horizontal|buffer
     },
     display = {
-      action_palette = {
-        provider = "default",
-      },
       chat = {
         intro_message = "Welcome to CodeCompanion ✨! Press ? for options",
         show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
@@ -299,6 +226,13 @@ return {
         show_settings = false, -- Show LLM settings at the top of the chat buffer?
         show_token_count = true, -- Show the token count for each response?
         start_in_insert_mode = false, -- Open the chat buffer in insert mode?
+        -- Change to true to show the current model
+        window = {
+          layout = "vertical", -- float|vertical|horizontal|buffer
+        },
+      },
+      action_palette = {
+        provider = "default",
       },
       diff = {
         provider = "mini_diff",
@@ -306,6 +240,7 @@ return {
     },
     opts = {
       log_level = "DEBUG",
+      system_prompt = PROMPTS.SYSTEM_PROMPT,
     },
     extensions = {
       mcphub = {
@@ -336,37 +271,102 @@ return {
         },
       },
     },
+    prompt_library = PROMPTS.PROMPT_LIBRARY,
   },
-  init = function()
-    -- Create command abbreviation
-    vim.cmd([[cab cc CodeCompanion]])
-    require("legendary").keymaps({
-      {
-        itemgroup = "CodeCompanion",
-        icon = "",
-        description = "Use the power of AI...",
-        keymaps = {
-          {
-            "<C-a>",
-            "<cmd>CodeCompanionActions<CR>",
-            description = "Open the action palette",
-            mode = { "n", "v" },
-          },
-          {
-            "<Leader>a",
-            "<cmd>CodeCompanionChat Toggle<CR>",
-            description = "Toggle a chat buffer",
-            mode = { "n", "v" },
-          },
-          {
-            "<LocalLeader>a",
-            "<cmd>CodeCompanionChat Add<CR>",
-            description = "Add code to a chat buffer",
-            mode = { "v" },
-          },
-        },
-      },
-    })
-    require("plugins.custom.spinner"):init()
+  keys = {
+    -- Recommend setup
+    {
+      mapping_key_prefix .. "p",
+      "<cmd>CodeCompanionActions<cr>",
+      desc = "Code Companion - Prompt Actions",
+    },
+    {
+      mapping_key_prefix .. "a",
+      function()
+        vim.cmd("CodeCompanionChat Toggle")
+        vim.cmd("startinsert")
+      end,
+      desc = "Code Companion - Toggle",
+      mode = { "n", "v" },
+    },
+    -- Some common usages with visual mode
+    {
+      mapping_key_prefix .. "e",
+      "<cmd>CodeCompanion /explain<cr>",
+      desc = "Code Companion - Explain code",
+      mode = "v",
+    },
+    {
+      mapping_key_prefix .. "f",
+      "<cmd>CodeCompanion /fix<cr>",
+      desc = "Code Companion - Fix code",
+      mode = "v",
+    },
+    {
+      mapping_key_prefix .. "l",
+      "<cmd>CodeCompanion /lsp<cr>",
+      desc = "Code Companion - Explain LSP diagnostic",
+      mode = { "n", "v" },
+    },
+    {
+      mapping_key_prefix .. "t",
+      "<cmd>CodeCompanion /tests<cr>",
+      desc = "Code Companion - Generate unit test",
+      mode = "v",
+    },
+    {
+      mapping_key_prefix .. "m",
+      "<cmd>CodeCompanion /commit<cr>",
+      desc = "Code Companion - Git commit message",
+    },
+    -- Custom prompts
+    {
+      mapping_key_prefix .. "M",
+      "<cmd>CodeCompanion /staged-commit<cr>",
+      desc = "Code Companion - Git commit message (staged)",
+    },
+    {
+      mapping_key_prefix .. "d",
+      "<cmd>CodeCompanion /inline-doc<cr>",
+      desc = "Code Companion - Inline document code",
+      mode = "v",
+    },
+    { mapping_key_prefix .. "D", "<cmd>CodeCompanion /doc<cr>", desc = "Code Companion - Document code", mode = "v" },
+    {
+      mapping_key_prefix .. "r",
+      "<cmd>CodeCompanion /refactor<cr>",
+      desc = "Code Companion - Refactor code",
+      mode = "v",
+    },
+    {
+      mapping_key_prefix .. "R",
+      "<cmd>CodeCompanion /review<cr>",
+      desc = "Code Companion - Review code",
+      mode = "v",
+    },
+    {
+      mapping_key_prefix .. "n",
+      "<cmd>CodeCompanion /naming<cr>",
+      desc = "Code Companion - Better naming",
+      mode = "v",
+    },
+    -- Quick chat
+    {
+      mapping_key_prefix .. "q",
+      function()
+        local input = vim.fn.input("Quick Chat: ")
+        if input ~= "" then
+          vim.cmd("CodeCompanion " .. input)
+        end
+      end,
+      desc = "Code Companion - Quick chat",
+    },
+  },
+  config = function(_, opts)
+    local spinner = require("plugins.code-companion.spinner")
+    spinner:init()
+
+    -- Setup the entire opts table
+    require("codecompanion").setup(opts)
   end,
 }

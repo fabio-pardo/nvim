@@ -63,6 +63,7 @@ vo.foldenable = true
 
 vo.ignorecase = true -- Ignore case
 vo.laststatus = 3 -- Use global statusline
+vo.splitkeep = "screen"
 
 -- Sets how Neovim will display certain whitespace characters in the editor
 vo.list = true
