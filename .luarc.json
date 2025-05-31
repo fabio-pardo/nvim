@@ -1,7 +1,3 @@
 {
-    "diagnostics.disable": [
-        "undefined-doc-name",
-        "undefined-field",
-        "deprecated"
-    ]
+	"diagnostics.disable": ["undefined-doc-name", "undefined-field", "deprecated"]
 }

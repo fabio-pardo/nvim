@@ -29,6 +29,7 @@ vg.loaded_perl_provider = 0 -- Do not load Perl
 -- if vim.fn.filereadable(os.getenv("HOME_DIR") .. ".local/share/mise/installs/python/3.11.0/bin/python") then
 --   vg.python3_host_prog = os.getenv("HOME_DIR") .. ".local/share/mise/installs/python/3.11.0/bin/python"
 -- end
+vg.ai_prefix_key = "<leader>a"
 
 -- Buffer options
 vb.autoindent = true

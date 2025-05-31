@@ -16,9 +16,28 @@ return {
         },
       },
     },
+    { "j-hui/fidget.nvim" }, -- Disply status
+    { "nvim-lua/plenary.nvim", branch = "master" },
+    { "nvim-treesitter/nvim-treesitter", opts = { ensure_installed = { "yaml", "markdown" } } },
     {
-      "nvim-treesitter/nvim-treesitter",
-      opts = { ensure_installed = { "yaml", "markdown" } },
+      "ravitemer/mcphub.nvim",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+      },
+      build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
+      config = function()
+        require("mcphub").setup()
+      end,
+    },
+    {
+      "MeanderingProgrammer/render-markdown.nvim", -- Make Markdown buffers look beautiful
+      ft = { "markdown", "codecompanion" },
+      opts = {
+        render_modes = true, -- Render in ALL modes
+        sign = {
+          enabled = false, -- Turn off in the status column
+        },
+      },
     },
     {
       "echasnovski/mini.diff",
@@ -30,30 +49,18 @@ return {
         })
       end,
     },
-    -- {
-    --   "MeanderingProgrammer/render-markdown.nvim",
-    --   ft = { "markdown", "codecompanion" },
-    --   opts = {
-    --     render_modes = true, -- Render in ALL modes
-    --     sign = {
-    --       enabled = false, -- Turn off in the status column
-    --     },
-    --   },
-    -- },
     {
-      "folke/edgy.nvim",
-      optional = true,
-      opts = function(_, opts)
-        opts.animate = { enabled = false }
-        opts.right = opts.right or {}
-        table.insert(opts.right, {
-          ft = "codecompanion",
-          title = "Companion Chat",
-          size = { width = 70 },
-        })
-      end,
+      "HakonHarnes/img-clip.nvim",
+      opts = {
+        filetypes = {
+          codecompanion = {
+            prompt_for_file_name = false,
+            template = "[Image]($FILE_PATH)",
+            use_absolute_path = true,
+          },
+        },
+      },
     },
-    "j-hui/fidget.nvim", -- Display status
     {
       "saghen/blink.cmp",
       lazy = false,
@@ -66,41 +73,22 @@ return {
         },
         cmdline = { sources = { "cmdline" } },
         sources = {
+          per_filetype = {
+            codecompanion = { "codecompanion" },
+          },
           default = { "lsp", "path", "buffer", "codecompanion" },
         },
+        completions = { blink = { enabled = true } },
       },
     },
-    "ravitemer/codecompanion-history.nvim", -- Save and load conversation history
     {
-      "ravitemer/mcphub.nvim",
-      cmd = "MCPHub",
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-      },
-      build = "npm install -g mcp-hub@latest", -- Installs `mcp-hub` node binary globally
-      config = function()
-        require("mcphub").setup()
-      end,
-    },
-    {
-      "Davidyz/VectorCode", -- Index and search code in your repositories
-      version = "*",
-      build = "pipx upgrade vectorcode",
+      "Davidyz/VectorCode",
+      version = "*", -- optional, depending on whether you're on nightly or release
+      build = "pipx upgrade vectorcode", -- optional but recommended. This keeps your CLI up-to-date.
       dependencies = { "nvim-lua/plenary.nvim" },
     },
     {
-      "HakonHarnes/img-clip.nvim", -- Share images with the chat buffer
-      event = "VeryLazy",
-      cmd = "PasteImage",
-      opts = {
-        filetypes = {
-          codecompanion = {
-            prompt_for_file_name = false,
-            template = "[Image]($FILE_PATH)",
-            use_absolute_path = true,
-          },
-        },
-      },
+      "ravitemer/codecompanion-history.nvim", -- Save and load conversation history
     },
   },
   opts = {
@@ -254,15 +242,32 @@ return {
       history = {
         enabled = true,
         opts = {
+          -- Keymap to open history from chat buffer (default: gh)
           keymap = "gh",
+          -- Keymap to save the current chat manually (when auto_save is disabled)
           save_chat_keymap = "sc",
-          auto_save = false,
+          -- Save all chats by default (disable to save only manually using 'sc')
+          auto_save = true,
+          -- Number of days after which chats are automatically deleted (0 to disable)
+          expiration_days = 0,
+          -- Picker interface ("telescope" or "snacks" or "fzf-lua" or "default")
+          picker = "telescope",
+          ---Automatically generate titles for new chats
           auto_generate_title = true,
+          title_generation_opts = {
+            ---Adapter for generating titles (defaults to active chat's adapter)
+            adapter = nil, -- e.g "copilot"
+            ---Model for generating titles (defaults to active chat's model)
+            model = nil, -- e.g "gpt-4o"
+          },
+          ---On exiting and entering neovim, loads the last chat on opening chat
           continue_last_chat = false,
+          ---When chat is cleared with `gx` delete the chat from history
           delete_on_clearing_chat = false,
-          picker = "snacks",
-          enable_logging = false,
+          ---Directory path to save the chats
           dir_to_save = vim.fn.stdpath("data") .. "/codecompanion-history",
+          ---Enable detailed logging for history extension
+          enable_logging = false,
         },
       },
       vectorcode = {
