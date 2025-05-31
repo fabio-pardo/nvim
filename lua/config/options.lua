@@ -19,6 +19,7 @@ Sessiondir = vim.fn.stdpath("data") .. "/sessions"
 -- Global options
 vg.mapleader = " " -- space is the leader!
 vg.maplocalleader = "\\"
+vg.ai_prefix_key = "<leader>a" -- AI Prefix key
 
 vg.neoterm_autoinsert = 0 -- Do not start terminal in insert mode
 vg.neoterm_autoscroll = 1 -- Autoscroll the terminal
@@ -29,7 +30,6 @@ vg.loaded_perl_provider = 0 -- Do not load Perl
 -- if vim.fn.filereadable(os.getenv("HOME_DIR") .. ".local/share/mise/installs/python/3.11.0/bin/python") then
 --   vg.python3_host_prog = os.getenv("HOME_DIR") .. ".local/share/mise/installs/python/3.11.0/bin/python"
 -- end
-vg.ai_prefix_key = "<leader>a"
 
 -- Buffer options
 vb.autoindent = true
@@ -47,7 +47,7 @@ vim.schedule(function()
 end)
 vo.completeopt = { "menuone", "noselect" } -- Completion opions for code completion
 vo.cursorlineopt = "screenline,number" -- Highlight the screen line of the cursor with CursorLine and the line number with CursorLineNr
-vo.emoji = false -- Turn off emojis
+vo.emoji = true -- Turn off emojis
 vo.fillchars = {
   fold = " ",
   foldopen = "",
