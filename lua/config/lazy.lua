@@ -22,27 +22,26 @@ require("lazy").setup({
     rtp = {
       -- disable some rtp plugins
       disabled_plugins = {
-        "gzip",
-        "matchit",
-        "matchparen",
-        "netrwPlugin",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
+        "gzip", -- handles .gz file compression
+        "matchit", -- enhanced % matching for brackets/tags
+        "matchparen", -- highlights matching parentheses
+        "netrwPlugin", -- built-in file explorer
+        "tarPlugin", -- handles .tar file archives
+        "tohtml", -- converts buffer to HTML
+        "tutor", -- Neovim's built-in tutorial
+        "zipPlugin", -- handles .zip file archives
       },
     },
   },
 })
 
--- Show hidden and ignored files
---
 -- keymaps and utils can be loaded, lazily, after plugins
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
     require("config.keymaps")
     require("util")
+    -- Show hidden and ignored files
     require("snacks").picker.sources.files.hidden = true
     require("snacks").picker.sources.files.ignored = true
   end,

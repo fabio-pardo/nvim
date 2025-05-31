@@ -161,7 +161,7 @@ local OPTS = {
         -- Number of days after which chats are automatically deleted (0 to disable)
         expiration_days = 0,
         -- Picker interface ("telescope" or "snacks" or "fzf-lua" or "default")
-        picker = "telescope",
+        picker = "snacks",
         ---Automatically generate titles for new chats
         auto_generate_title = true,
         title_generation_opts = {
