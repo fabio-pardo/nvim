@@ -1,3 +1,4 @@
+require("util/marks")
 return {
   {
     "sainnhe/gruvbox-material",
@@ -50,7 +51,6 @@ return {
       { "<leader>qk", "<cmd>SessionSave<CR>", desc = "Save session" },
       { "<leader>qa", "<cmd>SessionToggleAutoSave<CR>", desc = "Toggle autosave" },
     },
-
     ---enables autocomplete for opts
     ---@module "auto-session"
     ---@type AutoSession.Config
@@ -103,14 +103,12 @@ return {
         -- :gsub("/", "")
         -- :gsub(".venv", "")
       end
-
       require("venv-selector").setup({
         settings = {
           options = {
             -- If you put the callback here as a global option, its used for all searches (including the default ones by the plugin)
             on_telescope_result_callback = shorter_name,
           },
-
           search = {
             virtualenvs = {
               command = "fd '^python$' ~/.virtualenvs --type l",
@@ -133,7 +131,6 @@ return {
       { "cv", "<cmd>VenvSelect<cr>" },
     },
   },
-
   {
     "neovim/nvim-lspconfig",
     opts = {
