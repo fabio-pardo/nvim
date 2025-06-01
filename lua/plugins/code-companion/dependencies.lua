@@ -4,11 +4,7 @@ local CODECOMPANION_DEPENDENCIES = {
   {
     "folke/which-key.nvim",
     optional = true,
-    opts = {
-      spec = {
-        { mapping_key_prefix, group = "AI Code Companion", mode = { "n", "v" } },
-      },
-    },
+    opts = {},
   },
   { "j-hui/fidget.nvim" }, -- Disply status
   { "nvim-lua/plenary.nvim", branch = "master" },

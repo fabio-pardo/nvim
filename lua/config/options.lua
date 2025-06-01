@@ -72,7 +72,7 @@ vo.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 vo.modelines = 1 -- Only use folding settings for this file
 vo.mouse = "a" -- Use the mouse in all modes
-vo.sessionoptions = { "buffers", "curdir", "folds", "resize", "tabpages", "winpos", "winsize" } -- Session options to store in the session
+vo.sessionoptions = { "buffers", "curdir", "folds", "resize", "tabpages", "winpos", "winsize", "localoptions" } -- Session options to store in the session
 vo.scrolloff = 5 -- Set the cursor 5 lines down instead of directly at the top of the file
 --[[
   ShDa (viminfo for vim): session data history
