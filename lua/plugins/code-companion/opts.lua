@@ -1,5 +1,6 @@
 PROMPTS = require("plugins.code-companion.prompts")
 local ADAPTER = "copilot"
+local MODEL = "gpt-4.1"
 
 local OPTS = {
   adapters = {
@@ -14,7 +15,7 @@ local OPTS = {
       return require("codecompanion.adapters").extend("copilot", {
         schema = {
           model = {
-            default = "claude-sonnet-4",
+            default = MODEL,
           },
         },
       })
