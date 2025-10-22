@@ -1,25 +1,58 @@
 PROMPTS = require("plugins.code-companion.prompts")
-local ADAPTER = "copilot"
-local MODEL = "gpt-4.1"
+local ADAPTER = "gemini"
+local COPILOT_DEFAULT_MODEL = "gpt-4.1"
+local OPENROUTER_DEFAULT_MODEL = "qwen/qwen3-coder"
 
 local OPTS = {
   adapters = {
-    anthropic = function()
-      return require("codecompanion.adapters").extend("anthropic", {
-        env = {
-          api_key = "cmd:op read op://personal/Anthropic_API/credential --no-newline",
-        },
-      })
-    end,
-    copilot = function()
-      return require("codecompanion.adapters").extend("copilot", {
-        schema = {
-          model = {
-            default = MODEL,
+    http = {
+      gemini = function()
+        return require("codecompanion.adapters").extend("gemini", {
+          env = {
+            api_key = "cmd:op read op://VV/Gemini_API/credential",
           },
-        },
-      })
-    end,
+          schema = {
+            model = {
+              default = "gemini-2.5-pro",
+            },
+          },
+        })
+      end,
+      anthropic = function()
+        return require("codecompanion.adapters").extend("anthropic", {
+          env = {
+            api_key = "cmd:op read op://personal/Anthropic_API/credential --no-newline",
+          },
+        })
+      end,
+      copilot = function()
+        return require("codecompanion.adapters").extend("copilot", {
+          schema = {
+            model = {
+              default = COPILOT_DEFAULT_MODEL,
+            },
+          },
+        })
+      end,
+      openrouter = function()
+        return require("codecompanion.adapters").extend("openai_compatible", {
+          formatted_name = "OpenRouter",
+          env = {
+            url = "https://openrouter.ai/api",
+            api_key = "cmd:op read op://personal/OpenRouter_API/credential --no-newline",
+            chat_url = "/v1/chat/completions",
+          },
+          schema = {
+            model = {
+              default = OPENROUTER_DEFAULT_MODEL,
+            },
+          },
+        })
+      end,
+      opts = {
+        show_model_choices = true,
+      },
+    },
   },
   strategies = {
     chat = {
@@ -32,7 +65,7 @@ local OPTS = {
             adapter.parameters and (adapter.parameters.model and " (" .. adapter.parameters.model .. ")" or "") or ""
           )
         end,
-        user = "  Sandworm", -- .. vim.env.USER:gsub("^%l", string.upper),
+        user = "  Fabs", -- .. vim.env.USER:gsub("^%l", string.upper),
       },
       icons = {
         pinned_buffer = " ",
@@ -134,7 +167,59 @@ local OPTS = {
       provider = "default",
     },
     diff = {
-      provider = "mini_diff",
+      enabled = true,
+      provider = "mini_diff", -- mini_diff|split|inline
+
+      provider_opts = {
+        -- Options for inline diff provider
+        inline = {
+          layout = "buffer", -- float|buffer - Where to display the diff
+
+          diff_signs = {
+            signs = {
+              text = "▌", -- Sign text for normal changes
+              reject = "✗", -- Sign text for rejected changes in super_diff
+              highlight_groups = {
+                addition = "DiagnosticOk",
+                deletion = "DiagnosticError",
+                modification = "DiagnosticWarn",
+              },
+            },
+            -- Super Diff options
+            icons = {
+              accepted = " ",
+              rejected = " ",
+            },
+            colors = {
+              accepted = "DiagnosticOk",
+              rejected = "DiagnosticError",
+            },
+          },
+
+          opts = {
+            context_lines = 3, -- Number of context lines in hunks
+            dim = 25, -- Background dim level for floating diff (0-100, [100 full transparent], only applies when layout = "float")
+            full_width_removed = true, -- Make removed lines span full width
+            show_keymap_hints = true, -- Show "gda: accept | gdr: reject" hints above diff
+            show_removed = true, -- Show removed lines as virtual text
+          },
+        },
+
+        -- Options for the split provider
+        split = {
+          close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
+          layout = "vertical", -- vertical|horizontal split
+          opts = {
+            "internal",
+            "filler",
+            "closeoff",
+            "algorithm:histogram", -- https://adamj.eu/tech/2024/01/18/git-improve-diff-histogram/
+            "indent-heuristic", -- https://blog.k-nut.eu/better-git-diffs
+            "followwrap",
+            "linematch:120",
+          },
+        },
+      },
     },
   },
   opts = {
@@ -189,5 +274,4 @@ local OPTS = {
   },
   prompt_library = PROMPTS.PROMPT_LIBRARY,
 }
-
 return OPTS

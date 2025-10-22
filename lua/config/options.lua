@@ -10,11 +10,11 @@ local vw = vim.wo
 local vo = vim.opt
 
 vg.lazyvim_python_lsp = "basedpyright"
-vg.lazyvim_python_lsp = "ruff"
+-- vg.lazyvim_python_lsp = "ruff"
 
 -- Global variables
 Homedir = os.getenv("HOME")
-Sessiondir = vim.fn.stdpath("data") .. "/sessions"
+Sessiondir = vim.fn.stdpath("data") .. "/sessions/"
 
 -- Global options
 vg.mapleader = " " -- space is the leader!
@@ -24,12 +24,6 @@ vg.ai_prefix_key = "<leader>a" -- AI Prefix key
 vg.neoterm_autoinsert = 0 -- Do not start terminal in insert mode
 vg.neoterm_autoscroll = 1 -- Autoscroll the terminal
 vg.loaded_perl_provider = 0 -- Do not load Perl
--- if vim.fn.filereadable(os.getenv("HOME_DIR") .. ".asdf/shims/python2") then
---   vg.python_host_prog = os.getenv("HOME_DIR") .. ".asdf/shims/python2"
--- end
--- if vim.fn.filereadable(os.getenv("HOME_DIR") .. ".local/share/mise/installs/python/3.11.0/bin/python") then
---   vg.python3_host_prog = os.getenv("HOME_DIR") .. ".local/share/mise/installs/python/3.11.0/bin/python"
--- end
 
 -- Buffer options
 vb.autoindent = true
@@ -72,7 +66,7 @@ vo.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 vo.modelines = 1 -- Only use folding settings for this file
 vo.mouse = "a" -- Use the mouse in all modes
-vo.sessionoptions = { "buffers", "curdir", "folds", "resize", "tabpages", "winpos", "winsize", "localoptions" } -- Session options to store in the session
+vo.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 vo.scrolloff = 5 -- Set the cursor 5 lines down instead of directly at the top of the file
 --[[
   ShDa (viminfo for vim): session data history
@@ -94,7 +88,7 @@ vo.scrolloff = 5 -- Set the cursor 5 lines down instead of directly at the top o
 ]]
 vo.shada = [[!,'100,<0,f100,s100,h]]
 
-vo.shell = "/opt/homebrew/bin/fish"
+vo.shell = "/opt/homebrew/bin/zsh"
 vo.shiftround = true -- Round indent
 vo.shortmess = {
   A = true, -- ignore annoying swap file messages
