@@ -22,14 +22,14 @@ require("lazy").setup({
     rtp = {
       -- disable some rtp plugins
       disabled_plugins = {
-        "gzip", -- handles .gz file compression
-        "matchit", -- enhanced % matching for brackets/tags
-        "matchparen", -- highlights matching parentheses
-        "netrwPlugin", -- built-in file explorer
-        "tarPlugin", -- handles .tar file archives
-        "tohtml", -- converts buffer to HTML
-        "tutor", -- Neovim's built-in tutorial
-        "zipPlugin", -- handles .zip file archives
+        -- "gzip", -- handles .gz file compression
+        -- "matchit", -- enhanced % matching for brackets/tags
+        -- "matchparen", -- highlights matching parentheses
+        -- "netrwPlugin", -- built-in file explorer
+        -- "tarPlugin", -- handles .tar file archives
+        -- "tohtml", -- converts buffer to HTML
+        -- "tutor", -- Neovim's built-in tutorial
+        -- "zipPlugin", -- handles .zip file archives
       },
     },
   },
