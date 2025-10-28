@@ -1,6 +1,7 @@
 PROMPTS = require("plugins.codecompanion.prompts")
-local ADAPTER = "gemini"
-local COPILOT_DEFAULT_MODEL = "gpt-4.1"
+
+local ADAPTER = "copilot"
+local COPILOT_DEFAULT_MODEL = "claude-sonnet-4.5"
 local OPENROUTER_DEFAULT_MODEL = "qwen/qwen3-coder"
 
 local OPTS = {
