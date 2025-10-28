@@ -1,4 +1,4 @@
-PROMPTS = require("plugins.codecompanion.prompts")
+local PROMPTS = require("plugins.codecompanion.prompts")
 
 local ADAPTER = "copilot"
 local COPILOT_DEFAULT_MODEL = "claude-sonnet-4.5"
@@ -129,13 +129,6 @@ local OPTS = {
           description = "Stop Request",
         },
       },
-      -- -- Alter the sizing of the debug window
-      -- debug_window = {
-      --   ---@return number|fun(): number
-      --   width = vim.o.columns - 5,
-      --   ---@return number|fun(): number
-      --   height = vim.o.lines - 2,
-      -- },
     },
     inline = {
       adapter = ADAPTER,

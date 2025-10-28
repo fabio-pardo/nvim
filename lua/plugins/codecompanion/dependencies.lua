@@ -30,34 +30,25 @@ local DEPS = {
     ft = { "markdown", "codecompanion" },
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" },
     config = function()
-      -- Setup
       require("render-markdown").setup({
-        enabled = true,
+        completions = { blink = { enabled = true } },
         file_types = { "markdown", "codecompanion" },
-        render_modes = true,
-        win_options = {
-          conceallevel = { rendered = 2 },
-          concealcursor = { rendered = "nc" },
-        },
-        anti_conceal = {
-          -- Preserve glyphs in normal mode but make them "anti_conceal" in insert mode to
-          -- replicate concealcursor behaviour
-          ignore = {
-            bullet = { "n" },
-            callout = { "n" },
-            check_icon = { "n" },
-            check_scope = { "n" },
-            code_language = { "n" },
-            dash = { "n" },
-            head_icon = { "n" },
-            link = { "n" },
-            quote = { "n" },
-            table_border = { "n" },
-          },
-        },
-        dash = {
-          width = 80,
-        },
+        -- anti_conceal = {
+        --   -- Preserve glyphs in normal mode but make them "anti_conceal" in insert mode to
+        --   -- replicate concealcursor behaviour
+        --   ignore = {
+        --     bullet = { "n" },
+        --     callout = { "n" },
+        --     check_icon = { "n" },
+        --     check_scope = { "n" },
+        --     code_language = { "n" },
+        --     dash = { "n" },
+        --     head_icon = { "n" },
+        --     link = { "n" },
+        --     quote = { "n" },
+        --     table_border = { "n" },
+        --   },
+        -- },
         heading = {
           sign = false,
           icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },
@@ -82,59 +73,12 @@ local DEPS = {
             },
           },
         },
-        code = {
-          sign = false,
-          width = "block",
-          border = "thick",
-          min_width = 80,
-          highlight_language = "LineNr",
-          language_name = false,
-        },
-        quote = { icon = "▐" },
-        pipe_table = { cell = "raw" },
-        link = {
-          wiki = { icon = "󱗖 ", highlight = "RenderMarkdownWikiLink" },
-          custom = {
-            gdrive = {
-              pattern = "drive%.google%.com/drive",
-              icon = " ",
-            },
-            spreadsheets = {
-              pattern = "docs%.google%.com/spreadsheets",
-              icon = "󰧷 ",
-            },
-            document = {
-              pattern = "docs%.google%.com/document",
-              icon = "󰈙 ",
-            },
-            presentation = {
-              pattern = "docs%.google%.com/presentation",
-              icon = "󰈩 ",
-            },
-          },
-        },
-        latex = { enabled = false },
-        html = { comment = { conceal = false } },
-        on = {
-          render = function(ctx)
-            local is_lsp_float = pcall(vim.api.nvim_win_get_var, ctx.win, "lsp_floating_bufnr")
-            if is_lsp_float then
-              _G.LspConfig.highlight_doc_patterns(ctx.buf)
-            end
-          end,
-        },
         overrides = {
           filetype = {
             -- CodeCompanion
             codecompanion = {
               heading = {
                 icons = { "󰪥 ", "", " ", " ", " ", "" },
-                -- custom = {
-                --   codecompanion_input = {
-                --     pattern = "^## Me$",
-                --     icon = " ",
-                --   },
-                -- },
               },
               html = {
                 tag = {
@@ -153,6 +97,8 @@ local DEPS = {
             },
           },
         },
+        render_modes = true,
+        sign = { enabled = true },
       })
     end,
   },
