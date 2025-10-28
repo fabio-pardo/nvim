@@ -4,6 +4,8 @@
 
 local wk = require("which-key")
 wk.add({
+  { "<leader>o", group = "obsidian", icon = " ", mode = { "n", "v" } },
+
   { "<leader>v", group = "Virgin Voyages", icon = "🚢" },
   { "<leader>vv", ":VVNote<CR>", desc = "Create Virgin Voyages note", mode = "n" },
 
