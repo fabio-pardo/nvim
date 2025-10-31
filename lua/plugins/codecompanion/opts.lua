@@ -50,6 +50,13 @@ local OPTS = {
           },
         })
       end,
+      tavily = function()
+        return require("codecompanion.adapters").extend("tavily", {
+          env = {
+            api_key = "cmd:op read op://personal/Tavily_API/credential --no-newline",
+          },
+        })
+      end,
       opts = {
         show_model_choices = true,
       },

@@ -35,10 +35,18 @@ return {
   version = "v3.13.0", -- recommended, use latest release instead of latest commit
   lazy = true,
   ft = "markdown",
-  -- },
-  ---@module 'obsidian'
-  ---@type obsidian.config
-
+  dependencies = {
+    {
+      "OXY2DEV/markview.nvim",
+      lazy = false,
+      ft = "markdown",
+      -- For blink.cmp's completion
+      -- source
+      dependencies = {
+        "saghen/blink.cmp",
+      },
+    },
+  },
   keys = {
     { prefix .. "o", "<cmd>ObsidianOpen<CR>", desc = "Open on App" },
     { prefix .. "g", "<cmd>ObsidianSearch<CR>", desc = "Grep" },
@@ -60,8 +68,8 @@ return {
   opts = {
     workspaces = {
       {
-        name = "fabs",
-        path = "~/vaults/fabs",
+        name = "notes",
+        path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes",
       },
       -- {
       --   name = "old-vault",

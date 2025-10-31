@@ -27,12 +27,12 @@ local DEPS = {
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "codecompanion" },
+    ft = { "codecompanion" },
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" },
     config = function()
       require("render-markdown").setup({
         completions = { blink = { enabled = true } },
-        file_types = { "markdown", "codecompanion" },
+        -- file_types = { "codecompanion" },
         -- anti_conceal = {
         --   -- Preserve glyphs in normal mode but make them "anti_conceal" in insert mode to
         --   -- replicate concealcursor behaviour

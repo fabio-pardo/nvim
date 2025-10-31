@@ -4,7 +4,7 @@
 
 local wk = require("which-key")
 wk.add({
-     { "<leader>o", group = "obsidian", icon = " " },
+  { "<leader>o", group = "Obsidian", icon = "🔮" },
 
   { "<leader>a", group = "AI Code Companion", icon = "🤖" },
 
