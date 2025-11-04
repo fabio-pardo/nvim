@@ -32,23 +32,6 @@ local DEPS = {
     config = function()
       require("render-markdown").setup({
         completions = { blink = { enabled = true } },
-        -- file_types = { "codecompanion" },
-        -- anti_conceal = {
-        --   -- Preserve glyphs in normal mode but make them "anti_conceal" in insert mode to
-        --   -- replicate concealcursor behaviour
-        --   ignore = {
-        --     bullet = { "n" },
-        --     callout = { "n" },
-        --     check_icon = { "n" },
-        --     check_scope = { "n" },
-        --     code_language = { "n" },
-        --     dash = { "n" },
-        --     head_icon = { "n" },
-        --     link = { "n" },
-        --     quote = { "n" },
-        --     table_border = { "n" },
-        --   },
-        -- },
         heading = {
           sign = false,
           icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },

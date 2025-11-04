@@ -1,52 +1,11 @@
 local prefix = "<leader>o"
 
----@return string|osdate
-local _current_date = function()
-  -- Returns the current date in YYYY-MM-DD format.
-  return os.date("%Y-%m-%d")
-end
-
----@param title string|?
----@param note_type string|?
----@return string
-local _note_suffix = function(title, note_type)
-  local suffix = ""
-
-  if title ~= nil then
-    -- If title is given, transform it into valid file name.
-    suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
-  else
-    -- If title is nil, just add 4 random uppercase letters to the suffix.
-    for _ = 1, 4 do
-      suffix = suffix .. string.char(math.random(65, 90))
-    end
-  end
-
-  if note_type ~= nil then
-    -- If a descriptor is given, append it to the suffix.
-    suffix = suffix .. "-" .. note_type
-  end
-
-  return suffix
-end
-
 return {
   "obsidian-nvim/obsidian.nvim",
-  version = "v3.13.0", -- recommended, use latest release instead of latest commit
+  version = "*", -- recommended, use latest release instead of latest commit
   lazy = true,
   ft = "markdown",
-  dependencies = {
-    {
-      "OXY2DEV/markview.nvim",
-      lazy = false,
-      ft = "markdown",
-      -- For blink.cmp's completion
-      -- source
-      dependencies = {
-        "saghen/blink.cmp",
-      },
-    },
-  },
+  dependencies = {},
   keys = {
     { prefix .. "o", "<cmd>ObsidianOpen<CR>", desc = "Open on App" },
     { prefix .. "g", "<cmd>ObsidianSearch<CR>", desc = "Grep" },
@@ -71,24 +30,10 @@ return {
         name = "notes",
         path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes",
       },
-      -- {
-      --   name = "old-vault",
-      --   path = "~/vaults/old-vault",
-      -- },
     },
     daily_notes = {
-      -- Optional, if you keep daily notes in a separate directory.
       folder = "00-daily-notes",
-      -- Optional, if you want to change the date format for the ID of daily notes.
-      -- date_format = "%Y-%m-%d",
-      -- Optional, if you want to change the date format of the default alias of daily notes.
-      -- alias_format = "%B %-d, %Y",
-      -- Optional, default tags to add to each new daily note created.
-      -- default_tags = { "daily-notes" },
-      -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
       template = "00-daily-note.md",
-      -- Optional, if you want `Obsidian yesterday` to return the last work day or `Obsidian tomorrow` to return the next work day.
-      -- workdays_only = true,
     },
     log_level = vim.log.levels.INFO,
     completion = {
@@ -194,32 +139,7 @@ return {
       },
       -- A map for configuring unique directories and paths for specific templates
       --- See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Template#customizations
-      customizations = {
-        ["01-journal"] = {
-          notes_subdir = "01-journal",
-          note_id_func = function()
-            return _current_date()
-          end,
-        },
-        ["02.0-work-daily-note"] = {
-          notes_subdir = "02-work/00-daily-notes",
-          note_id_func = function()
-            return _current_date()
-          end,
-        },
-        ["02.1-work-meeting"] = {
-          notes_subdir = "02-work/01-meetings",
-          note_id_func = function(title)
-            return _current_date() .. "-" .. _note_suffix(title, "meeting")
-          end,
-        },
-        ["02.2-work-note"] = {
-          notes_subdir = "02-work/02-notes",
-          note_id_func = function(title)
-            return _current_date() .. "-" .. _note_suffix(title, "note")
-          end,
-        },
-      },
+      customizations = {},
     },
 
     -- Sets how you follow URLs
@@ -284,36 +204,7 @@ return {
       -- Runs anytime you enter the buffer for a note.
       ---@param client obsidian.Client
       ---@param note obsidian.Note
-      enter_note = function(client, note)
-        if note == nil then
-          return
-        end
-        local todays_date = _current_date()
-        if note.path:parent().name == "00-daily-notes" and note.id == todays_date then
-          local Note = require("obsidian.note")
-          local Path = require("obsidian.path")
-          local ObsUtil = require("obsidian.util")
-
-          local journal_path_name = "~/vaults/fabs/01-journal/" .. todays_date .. ".md"
-          local journal_path = Path.new(journal_path_name)
-          if not journal_path:exists() then
-            Note.create({
-              template = "01-journal.md",
-              should_write = true,
-            })
-          end
-          if ObsUtil.is_working_day(os.time()) then
-            local work_daily_path_name = "~/vaults/fabs/02-work/00-daily-notes/" .. todays_date .. ".md"
-            local work_daily_path = Path.new(work_daily_path_name)
-            if not work_daily_path:exists() then
-              Note.create({
-                template = "02.0-work-daily-note.md",
-                should_write = true,
-              })
-            end
-          end
-        end
-      end,
+      enter_note = function(client, note) end,
 
       -- Runs anytime you leave the buffer for a note.
       ---@param client obsidian.Client
@@ -333,7 +224,7 @@ return {
     -- Optional, configure additional syntax highlighting / extmarks.
     -- This requires you have `conceallevel` set to 1 or 2. See `:help conceallevel` for more details.
     ui = {
-      enable = false, -- set to false to disable all additional syntax features
+      enable = true, -- set to false to disable all additional syntax features
       ignore_conceal_warn = false, -- set to true to disable conceallevel specific warning
       update_debounce = 200, -- update delay after a text change (in milliseconds)
       max_file_length = 5000, -- disable UI features for files with more than this many lines
