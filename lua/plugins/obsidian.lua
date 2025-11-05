@@ -5,7 +5,14 @@ return {
   version = "*", -- recommended, use latest release instead of latest commit
   lazy = true,
   ft = "markdown",
-  dependencies = {},
+  dependencies = {
+    {
+      "iamcco/markdown-preview.nvim",
+      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+      ft = { "markdown" },
+      build = ":call mkdp#util#install()",
+    },
+  },
   keys = {
     { prefix .. "o", "<cmd>ObsidianOpen<CR>", desc = "Open on App" },
     { prefix .. "g", "<cmd>ObsidianSearch<CR>", desc = "Grep" },
