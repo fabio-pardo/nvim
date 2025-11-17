@@ -3,7 +3,7 @@ local prefix = "<leader>o"
 -- Helper function to get current date
 ---@return string
 local _current_date = function()
-  return os.date("%Y-%m-%d")
+  return os.date("%Y-%m-%d") --[[@as string]]
 end
 
 return {
@@ -236,15 +236,10 @@ return {
       vim.ui.open(img)
     end,
 
-    ---@class obsidian.config.OpenOpts
-    ---
-    ---Opens the file with current line number
-    ---@field use_advanced_uri? boolean
-    ---
-    ---Function to do the opening, default to vim.ui.open
-    ---@field func? fun(uri: string)
     open = {
+      ---@type boolean
       use_advanced_uri = false,
+      ---@type fun(uri: string)
       func = vim.ui.open,
     },
 
@@ -277,31 +272,31 @@ return {
     -- 5. "hsplit_force" - always open a new horizontal split if the file is not in the adjacent hsplit.
     open_notes_in = "current",
 
-    -- Optional, define your own callbacks to further customize behavior.
-    callbacks = {
-      -- Runs at the end of `require("obsidian").setup()`.
-      ---@param client obsidian.Client
-      post_setup = function(client) end,
-
-      -- Runs anytime you enter the buffer for a note.
-      ---@param client obsidian.Client
-      ---@param note obsidian.Note
-      enter_note = function(client, note) end,
-
-      -- Runs anytime you leave the buffer for a note.
-      ---@param client obsidian.Client
-      ---@param note obsidian.Note
-      leave_note = function(client, note) end,
-
-      -- Runs right before writing the buffer for a note.
-      ---@param client obsidian.Client
-      ---@param note obsidian.Note
-      pre_write_note = function(client, note) end,
-
-      -- Runs anytime the workspace is set/changed.
-      ---@param workspace obsidian.Workspace
-      post_set_workspace = function(workspace) end,
-    },
+    -- -- Optional, define your own callbacks to further customize behavior.
+    -- callbacks = {
+    --   -- Runs at the end of `require("obsidian").setup()`.
+    --   ---@param _client obsidian.Client
+    --   post_setup = function(_client) end,
+    --
+    --   -- Runs anytime you enter the buffer for a note.
+    --   ---@param _client obsidian.Client
+    --   ---@param _note obsidian.Note
+    --   enter_note = function(_client, _note) end,
+    --
+    --   -- Runs anytime you leave the buffer for a note.
+    --   ---@param _client obsidian.Client
+    --   ---@param _note obsidian.Note
+    --   leave_note = function(_client, _note) end,
+    --
+    --   -- Runs right before writing the buffer for a note.
+    --   ---@param _client obsidian.Client
+    --   ---@param _note obsidian.Note
+    --   pre_write_note = function(_client, _note) end,
+    --
+    --   -- Runs anytime the workspace is set/changed.
+    --   ---@param _workspace obsidian.Workspace
+    --   post_set_workspace = function(_workspace) end,
+    -- },
 
     -- Optional, configure additional syntax highlighting / extmarks.
     -- This requires you have `conceallevel` set to 1 or 2. See `:help conceallevel` for more details.
@@ -336,50 +331,29 @@ return {
       },
     },
 
-    ---@class obsidian.config.AttachmentsOpts
-    ---
-    ---Default folder to save images to, relative to the vault root.
-    ---@field img_folder? string
-    ---
-    ---Default name for pasted images
-    ---@field img_name_func? fun(): string
-    ---
-    ---Default text to insert for pasted images, for customizing, see: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Images
-    ---@field img_text_func? fun(path: obsidian.Path): string
-    ---
-    ---Whether to confirm the paste or not. Defaults to true.
-    ---@field confirm_img_paste? boolean
     attachments = {
+      ---@type string
       img_folder = "assets/imgs",
+      ---@type fun(): string
       img_name_func = function()
         return string.format("Pasted image %s", os.date("%Y%m%d%H%M%S"))
       end,
+      ---@type boolean
       confirm_img_paste = true,
     },
 
-    ---@deprecated in favor of the footer option below
-    statusline = {
-      enabled = true,
-      format = "{{properties}} properties {{backlinks}} backlinks {{words}} words {{chars}} chars",
-    },
-
-    ---@class obsidian.config.FooterOpts
-    ---
-    ---@field enabled? boolean
-    ---@field format? string
-    ---@field hl_group? string
-    ---@field separator? string|false Set false to disable separator; set an empty string to insert a blank line separator.
     footer = {
+      ---@type boolean
       enabled = true,
+      ---@type string
       format = "{{backlinks}} backlinks  {{properties}} properties  {{words}} words  {{chars}} chars",
+      ---@type string
       hl_group = "Comment",
+      ---@type string
       separator = string.rep("-", 80),
     },
-    ---@class obsidian.config.CheckboxOpts
-    ---
-    ---Order of checkbox state chars, e.g. { " ", "x" }
-    ---@field order? string[]
     checkbox = {
+      ---@type string[]
       order = { " ", "x" },
     },
   },
