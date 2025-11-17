@@ -1,5 +1,11 @@
 local prefix = "<leader>o"
 
+-- Helper function to get current date
+---@return string
+local _current_date = function()
+  return os.date("%Y-%m-%d")
+end
+
 return {
   "obsidian-nvim/obsidian.nvim",
   version = "*", -- recommended, use latest release instead of latest commit
@@ -13,6 +19,62 @@ return {
       build = ":call mkdp#util#install()",
     },
   },
+  config = function(_, opts)
+    require("obsidian").setup(opts)
+
+    -- Set up autocommand to create subsequent notes when opening daily note
+    vim.api.nvim_create_autocmd("BufEnter", {
+      pattern = "*.md",
+      callback = function(ev)
+        local bufname = vim.api.nvim_buf_get_name(ev.buf)
+
+        -- Only proceed if this is in the daily notes folder
+        if not bufname:match("00%-daily%-notes") then
+          return
+        end
+
+        local todays_date = _current_date()
+        local filename = vim.fn.fnamemodify(bufname, ":t:r") -- get filename without extension
+
+        -- Check if this is today's daily note
+        if filename == todays_date then
+          local Path = require("obsidian.path")
+          local Note = require("obsidian.note")
+
+          -- Create journal note if it doesn't exist
+          local journal_path = Path.new(
+            vim.fn.expand(
+              "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/01-journal/" .. todays_date .. ".md"
+            )
+          )
+
+          if not journal_path:exists() then
+            vim.schedule(function()
+              Note.create({ title = todays_date, template = "01-journal.md", should_write = true })
+            end)
+          end
+
+          -- Create work daily note if it's a working day
+          local ObsUtil = require("obsidian.util")
+          if ObsUtil.is_working_day(os.time()) then
+            local work_daily_path = Path.new(
+              vim.fn.expand(
+                "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/02-work/00-work-daily-notes/"
+                  .. todays_date
+                  .. ".md"
+              )
+            )
+
+            if not work_daily_path:exists() then
+              vim.schedule(function()
+                Note.create({ title = todays_date, template = "02.0-work-daily-note.md", should_write = true })
+              end)
+            end
+          end
+        end
+      end,
+    })
+  end,
   keys = {
     { prefix .. "o", "<cmd>ObsidianOpen<CR>", desc = "Open on App" },
     { prefix .. "g", "<cmd>ObsidianSearch<CR>", desc = "Grep" },
@@ -146,7 +208,20 @@ return {
       },
       -- A map for configuring unique directories and paths for specific templates
       --- See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Template#customizations
-      customizations = {},
+      customizations = {
+        ["01-journal"] = {
+          notes_subdir = "01-journal",
+          note_id_func = function()
+            return _current_date()
+          end,
+        },
+        ["02.0-work-daily-note"] = {
+          notes_subdir = "02-work/00-work-daily-notes",
+          note_id_func = function()
+            return _current_date()
+          end,
+        },
+      },
     },
 
     -- Sets how you follow URLs
