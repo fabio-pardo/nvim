@@ -27,7 +27,7 @@ local DEPS = {
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "codecompanion" },
+    ft = { "codecompanion", "markdown" },
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" },
     config = function()
       require("render-markdown").setup({
