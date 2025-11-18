@@ -6,6 +6,18 @@ local _current_date = function()
   return os.date("%Y-%m-%d") --[[@as string]]
 end
 
+-- Helper function to get current date with optional title suffix
+---@param title string|?
+---@return string
+local _date_with_title = function(title)
+  local date = _current_date()
+  if title ~= nil and title ~= "" then
+    local suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+    return date .. "-" .. suffix
+  end
+  return date
+end
+
 return {
   "obsidian-nvim/obsidian.nvim",
   version = "*", -- recommended, use latest release instead of latest commit
@@ -59,7 +71,7 @@ return {
           if ObsUtil.is_working_day(os.time()) then
             local work_daily_path = Path.new(
               vim.fn.expand(
-                "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/02-work/00-work-daily-notes/"
+                "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes/02-work/00-daily-notes/"
                   .. todays_date
                   .. ".md"
               )
@@ -126,21 +138,15 @@ return {
     ---@param title string|?
     ---@return string
     note_id_func = function(title)
-      -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
-      -- In this case a note with the title 'My new note' will be given an ID that looks
-      -- like '1657296016-my-new-note', and therefore the file name '1657296016-my-new-note.md'.
-      -- You may have as many periods in the note ID as you'd like—the ".md" will be added automatically
-      local suffix = ""
-      if title ~= nil then
-        -- If title is given, transform it into valid file name.
-        suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
-      else
-        -- If title is nil, just add 4 random uppercase letters to the suffix.
+      -- If title is nil, add 4 random uppercase letters as suffix
+      local suffix = title
+      if suffix == nil then
+        suffix = ""
         for _ = 1, 4 do
           suffix = suffix .. string.char(math.random(65, 90))
         end
       end
-      return tostring(os.time()) .. "-" .. suffix
+      return _date_with_title(suffix)
     end,
 
     -- Optional, customize how note file names are generated given the ID, target directory, and title.
@@ -216,9 +222,22 @@ return {
           end,
         },
         ["02.0-work-daily-note"] = {
-          notes_subdir = "02-work/00-work-daily-notes",
+          notes_subdir = "02-work/00-daily-notes",
           note_id_func = function()
             return _current_date()
+          end,
+        },
+        ["02.1-work-meeting"] = {
+          notes_subdir = "02-work/01-meetings",
+          note_id_func = function(title)
+            return _date_with_title(title)
+          end,
+        },
+
+        ["02.2-work-note"] = {
+          notes_subdir = "02-work/02-notes",
+          note_id_func = function(title)
+            return _date_with_title(title)
           end,
         },
       },
