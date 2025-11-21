@@ -1,7 +1,8 @@
 local PROMPTS = require("plugins.codecompanion.prompts")
 
-local ADAPTER = "copilot"
+local ADAPTER = "gemini"
 local COPILOT_DEFAULT_MODEL = "claude-sonnet-4.5"
+local GEMINI_DEFAULT_MODEL = "gemini-2.5-pro"
 local OPENROUTER_DEFAULT_MODEL = "qwen/qwen3-coder"
 
 local OPTS = {
@@ -14,7 +15,7 @@ local OPTS = {
           },
           schema = {
             model = {
-              default = "gemini-2.5-pro",
+              default = GEMINI_DEFAULT_MODEL,
             },
           },
         })
