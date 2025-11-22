@@ -1,24 +1,7 @@
 {
   "extras": [
     "lazyvim.plugins.extras.ai.copilot",
-    "lazyvim.plugins.extras.coding.blink",
-    "lazyvim.plugins.extras.coding.mini-comment",
-    "lazyvim.plugins.extras.coding.mini-snippets",
-    "lazyvim.plugins.extras.coding.mini-surround",
-    "lazyvim.plugins.extras.coding.neogen",
-    "lazyvim.plugins.extras.coding.yanky",
-    "lazyvim.plugins.extras.dap.core",
-    "lazyvim.plugins.extras.dap.nlua",
-    "lazyvim.plugins.extras.editor.aerial",
-    "lazyvim.plugins.extras.editor.dial",
-    "lazyvim.plugins.extras.editor.inc-rename",
-    "lazyvim.plugins.extras.editor.refactoring",
-    "lazyvim.plugins.extras.test.core",
-    "lazyvim.plugins.extras.ui.treesitter-context",
-    "lazyvim.plugins.extras.util.dot",
-    "lazyvim.plugins.extras.util.mini-hipatterns",
-    "lazyvim.plugins.extras.util.project",
-    "lazyvim.plugins.extras.util.rest"
+    "lazyvim.plugins.extras.coding.yanky"
   ],
   "install_version": 8,
   "news": {

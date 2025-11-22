@@ -7,16 +7,14 @@ end
 
 return {
   "linux-cultist/venv-selector.nvim",
-  dependencies = {
-    "neovim/nvim-lspconfig",
-  },
-  ft = "python",
-  keys = {
-    { "cv", "<cmd>VenvSelect<cr>", desc = "Select Python virtualenv" },
-  },
+  cmd = "VenvSelect",
   opts = {
     options = {
-      on_telescope_result_callback = shorter_name,
+      notify_user_on_venv_activation = true,
+      -- on_telescope_result_callback = shorter_name,
     },
   },
+  --  Call config for Python files and load the cached venv automatically
+  ft = "python",
+  keys = { { "<leader>cv", "<cmd>:VenvSelect<cr>", desc = "Select VirtualEnv", ft = "python" } },
 }
