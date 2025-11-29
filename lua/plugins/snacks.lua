@@ -31,12 +31,12 @@ return {
       notification = {
         wo = { wrap = true },
       },
-      minimal = {
-        wo = { wrap = true },
-      },
-      dashboard = {
-        wo = { wrap = true },
-      },
+      -- minimal = {
+      --   wo = { wrap = true },
+      -- },
+      -- dashboard = {
+      --   wo = { wrap = true },
+      -- },
     },
   },
 }
