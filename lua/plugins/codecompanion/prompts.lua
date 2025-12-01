@@ -11,51 +11,25 @@ local CONSTANTS = {
 }
 
 PROMPT_LIBRARY = {
-  ["Generate a Commit Message for Staged"] = {
-    strategy = CONSTANTS.STRATEGY.WORKFLOW,
-    description = "Generate a commit message for staged changes",
+  ["Commit and Push Staged Changes"] = {
+    strategy = CONSTANTS.STRATEGY.CHAT,
+    description = "Commit and push staged changes",
     opts = {
       adapter = {
         name = "copilot",
         model = "claude-haiku-4.5",
       },
-      -- auto_submit = true,
+      auto_submit = true,
       is_slash_cmd = true,
-      short_name = "staged-commit",
+      short_name = "commit-push",
     },
     prompts = {
       {
-        {
-          role = CONSTANTS.USER.ROLE,
-          content = function()
-            local diff = vim.system({ "git", "diff", "--no-ext-diff", "--staged" }, { text = true }):wait()
-            return string.format(
-              [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me:
-
-```diff
-%s
-```
-]],
-              diff.stdout
-            )
-          end,
-          opts = {
-            auto_submit = true,
-            contains_code = true,
-          },
-        },
-      },
-      {
-        {
-          role = CONSTANTS.USER.ROLE,
-          content = function()
-            vim.g.codecompanion_yolo_mode = true
-            return [[Using @{cmd_runner}, generate the git commands to commit the staged file changes with the generated message and push to the remote.]]
-          end,
-          opts = {
-            auto_submit = false,
-          },
-        },
+        role = CONSTANTS.USER.ROLE,
+        content = function()
+          vim.g.codecompanion_yolo_mode = true
+          return CONSTANTS.USER.COMMIT_PUSH
+        end,
       },
     },
   },
