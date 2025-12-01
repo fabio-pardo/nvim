@@ -13,7 +13,7 @@ local KEYS = {
   },
 
   {
-    mapping_key_prefix .. "g",
+    mapping_key_prefix .. "d",
     "<cmd>CodeCompanionChat Add<cr>",
     desc = "Code Companion - Add visually selected chat to the current chat buffer",
     mode = { "n", "v" },
