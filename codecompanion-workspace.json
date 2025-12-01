@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "name": "Neovim Configuration",
+  "version": "1.1.0",
+  "description": "Workspace for the user's Neovim configuration, focusing on LazyVim, CodeCompanion, and Obsidian workflows.",
+  "system_prompt": "You are an expert Neovim developer assisting with a LazyVim-based configuration. You have context on the user's core settings, plugin configurations, and utility functions.",
+  "groups": [
+    {
+      "name": "Core Configuration",
+      "description": "General Neovim settings, keymaps, autocommands, and the Lazy.nvim bootstrap.",
+      "system_prompt": "Focus on the core Neovim infrastructure, including options, keymaps, and autocommands.",
+      "data": [
+        "core.init",
+        "core.options",
+        "core.keymaps",
+        "core.autocmds",
+        "core.lazy",
+        "lazyvim.docs"
+      ]
+    },
+    {
+      "name": "CodeCompanion Config",
+      "description": "Configuration for the CodeCompanion AI assistant, including adapters, prompts, and UI settings.",
+      "system_prompt": "Focus on the AI assistant configuration. Pay attention to custom prompts and adapter settings.",
+      "data": [
+        "cc.main",
+        "cc.opts",
+        "cc.prompts",
+        "cc.keys",
+        "cc.deps",
+        "cc.spinner",
+        "cc.docs"
+      ]
+    },
+    {
+      "name": "Obsidian Workflow",
+      "description": "Settings for Obsidian.nvim and note-taking workflows.",
+      "system_prompt": "Focus on the Obsidian.nvim integration and note-taking configurations.",
+      "data": [
+        "plugins.obsidian"
+      ]
+    },
+    {
+      "name": "Utilities",
+      "description": "Custom helper functions and utilities.",
+      "system_prompt": "Focus on custom Lua utility modules.",
+      "data": [
+        "util.init",
+        "util.marks"
+      ]
+    },
+    {
+      "name": "General Plugins",
+      "description": "Configuration for other general purpose plugins (Session, UI, Tmux, etc).",
+      "system_prompt": "Focus on general plugin configurations.",
+      "data": [
+        "plugins.auto_session",
+        "plugins.colorscheme",
+        "plugins.snacks",
+        "plugins.tmux",
+        "plugins.venv"
+      ]
+    }
+  ],
+  "data": {
+    "core.init": {
+      "type": "file",
+      "path": "init.lua",
+      "description": "Main entry point for Neovim configuration"
+    },
+    "core.options": {
+      "type": "file",
+      "path": "lua/config/options.lua",
+      "description": "General Neovim options and settings"
+    },
+    "core.keymaps": {
+      "type": "file",
+      "path": "lua/config/keymaps.lua",
+      "description": "Global keymap definitions"
+    },
+    "core.autocmds": {
+      "type": "file",
+      "path": "lua/config/autocmds.lua",
+      "description": "Autocommand definitions"
+    },
+    "core.lazy": {
+      "type": "file",
+      "path": "lua/config/lazy.lua",
+      "description": "Lazy.nvim package manager bootstrap and configuration"
+    },
+    "lazyvim.docs": {
+      "type": "url",
+      "path": "https://www.lazyvim.org/",
+      "description": "LazyVim Official Documentation"
+    },
+    "cc.main": {
+      "type": "file",
+      "path": "lua/plugins/codecompanion.lua",
+      "description": "Main CodeCompanion plugin setup"
+    },
+    "cc.opts": {
+      "type": "file",
+      "path": "lua/plugins/codecompanion/opts.lua",
+      "description": "CodeCompanion options and settings"
+    },
+    "cc.prompts": {
+      "type": "file",
+      "path": "lua/plugins/codecompanion/prompts.lua",
+      "description": "Custom prompts for CodeCompanion"
+    },
+    "cc.keys": {
+      "type": "file",
+      "path": "lua/plugins/codecompanion/keys.lua",
+      "description": "Keybindings specific to CodeCompanion"
+    },
+    "cc.deps": {
+      "type": "file",
+      "path": "lua/plugins/codecompanion/dependencies.lua",
+      "description": "CodeCompanion dependencies"
+    },
+    "cc.spinner": {
+      "type": "file",
+      "path": "lua/plugins/codecompanion/spinner.lua",
+      "description": "Spinner UI configuration"
+    },
+    "cc.docs": {
+      "type": "url",
+      "path": "https://codecompanion.olimorris.dev/",
+      "description": "CodeCompanion.nvim Official Documentation"
+    },
+    "plugins.obsidian": {
+      "type": "file",
+      "path": "lua/plugins/obsidian.lua",
+      "description": "Obsidian.nvim configuration"
+    },
+    "util.init": {
+      "type": "file",
+      "path": "lua/util/init.lua",
+      "description": "General utility functions"
+    },
+    "util.marks": {
+      "type": "file",
+      "path": "lua/util/marks.lua",
+      "description": "Utilities for handling marks"
+    },
+    "plugins.auto_session": {
+      "type": "file",
+      "path": "lua/plugins/auto-session.lua",
+      "description": "Auto-session plugin configuration"
+    },
+    "plugins.colorscheme": {
+      "type": "file",
+      "path": "lua/plugins/colorscheme.lua",
+      "description": "Colorscheme settings"
+    },
+    "plugins.snacks": {
+      "type": "file",
+      "path": "lua/plugins/snacks.lua",
+      "description": "Snacks.nvim configuration"
+    },
+    "plugins.tmux": {
+      "type": "file",
+      "path": "lua/plugins/tmux.lua",
+      "description": "Tmux integration settings"
+    },
+    "plugins.venv": {
+      "type": "file",
+      "path": "lua/plugins/venv-selector.lua",
+      "description": "Python virtual environment selector configuration"
+    }
+  }
+}

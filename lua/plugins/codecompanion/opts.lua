@@ -134,6 +134,12 @@ local OPTS = {
           callback = "keymaps.close",
           description = "Close Chat",
         },
+        codeblock = {
+          modes = { n = "gC" },
+          index = 7,
+          callback = "keymaps.codeblock",
+          description = "Insert codeblock",
+        },
         stop = {
           modes = {
             n = "<C-c>",
@@ -164,81 +170,36 @@ local OPTS = {
     layout = "buffer", -- vertical|horizontal|buffer
   },
   display = {
-    chat = {
-      intro_message = "Welcome to CodeCompanion ✨! Press ? for options",
-      show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
-      separator = "─", -- The separator between the different messages in the chat buffer
-      show_references = true, -- Show references (from slash commands and variables) in the chat buffer?
-      show_settings = false, -- Show LLM settings at the top of the chat buffer?
-      show_token_count = true, -- Show the token count for each response?
-      start_in_insert_mode = false, -- Open the chat buffer in insert mode?
-      -- Change to true to show the current model
-      window = {
-        layout = "vertical", -- float|vertical|horizontal|buffer
-      },
-    },
     action_palette = {
       provider = "default",
     },
-    diff = {
-      enabled = true,
-      provider = "mini_diff", -- mini_diff|split|inline
-
-      provider_opts = {
-        -- Options for inline diff provider
-        inline = {
-          layout = "buffer", -- float|buffer - Where to display the diff
-
-          diff_signs = {
-            signs = {
-              text = "▌", -- Sign text for normal changes
-              reject = "✗", -- Sign text for rejected changes in super_diff
-              highlight_groups = {
-                addition = "DiagnosticOk",
-                deletion = "DiagnosticError",
-                modification = "DiagnosticWarn",
-              },
-            },
-            -- Super Diff options
-            icons = {
-              accepted = " ",
-              rejected = " ",
-            },
-            colors = {
-              accepted = "DiagnosticOk",
-              rejected = "DiagnosticError",
-            },
-          },
-
-          opts = {
-            context_lines = 3, -- Number of context lines in hunks
-            dim = 25, -- Background dim level for floating diff (0-100, [100 full transparent], only applies when layout = "float")
-            full_width_removed = true, -- Make removed lines span full width
-            show_keymap_hints = true, -- Show "gda: accept | gdr: reject" hints above diff
-            show_removed = true, -- Show removed lines as virtual text
-          },
-        },
-
-        -- Options for the split provider
-        split = {
-          close_chat_at = 240, -- Close an open chat buffer if the total columns of your display are less than...
-          layout = "vertical", -- vertical|horizontal split
-          opts = {
-            "internal",
-            "filler",
-            "closeoff",
-            "algorithm:histogram", -- https://adamj.eu/tech/2024/01/18/git-improve-diff-histogram/
-            "indent-heuristic", -- https://blog.k-nut.eu/better-git-diffs
-            "followwrap",
-            "linematch:120",
-          },
-        },
+    chat = {
+      -- show_references = true,
+      -- show_header_separator = false,
+      -- show_settings = true,
+      show_reasoning = false,
+      fold_context = true,
+    },
+  },
+  memory = {
+    opts = {
+      chat = {
+        enabled = true,
+      },
+    },
+    claude = {
+      description = "Memory files for Claude Code users",
+      files = {
+        "~/.claude/CLAUDE.md",
+        "CLAUDE.md",
+        "CLAUDE.local.md",
       },
     },
   },
   opts = {
-    log_level = "DEBUG",
     system_prompt = PROMPTS.SYSTEM_PROMPT,
+    language = "British English",
+    log_level = "DEBUG",
   },
   extensions = {
     mcphub = {
@@ -341,6 +302,7 @@ local OPTS = {
         },
       },
     },
+
     vectorcode = {
       opts = {
         add_tool = true,

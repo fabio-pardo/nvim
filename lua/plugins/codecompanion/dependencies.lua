@@ -27,11 +27,11 @@ local DEPS = {
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "codecompanion", "markdown" },
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" },
     config = function()
       require("render-markdown").setup({
         completions = { blink = { enabled = true } },
+        file_types = { "codecompanion", "markdown", "nvim-pack" },
         heading = {
           sign = false,
           icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },
@@ -65,23 +65,24 @@ local DEPS = {
               },
               html = {
                 tag = {
-                  buf = { icon = " ", highlight = "CodeCompanionChatVariable" },
-                  file = { icon = " ", highlight = "CodeCompanionChatVariable" },
-                  help = { icon = "󰘥 ", highlight = "CodeCompanionChatVariable" },
-                  image = { icon = " ", highlight = "CodeCompanionChatVariable" },
-                  symbols = { icon = " ", highlight = "CodeCompanionChatVariable" },
-                  url = { icon = "󰖟 ", highlight = "CodeCompanionChatVariable" },
                   var = { icon = " ", highlight = "CodeCompanionChatVariable" },
-                  tool = { icon = " ", highlight = "CodeCompanionChatTool" },
                   user = { icon = " ", highlight = "CodeCompanionChatTool" },
-                  group = { icon = " ", highlight = "CodeCompanionChatToolGroup" },
+                  buf = { icon = " ", highlight = "CodeCompanionChatIcon" },
+                  file = { icon = " ", highlight = "CodeCompanionChatIcon" },
+                  group = { icon = " ", highlight = "CodeCompanionChatIcon" },
+                  help = { icon = "󰘥 ", highlight = "CodeCompanionChatIcon" },
+                  image = { icon = " ", highlight = "CodeCompanionChatIcon" },
+                  memory = { icon = "󰧑 ", highlight = "CodeCompanionChatIcon" },
+                  symbols = { icon = " ", highlight = "CodeCompanionChatIcon" },
+                  tool = { icon = "󰯠 ", highlight = "CodeCompanionChatIcon" },
+                  url = { icon = "󰌹 ", highlight = "CodeCompanionChatIcon" },
                 },
               },
             },
           },
         },
         render_modes = true,
-        sign = { enabled = true },
+        sign = { enabled = false },
       })
     end,
   },

@@ -1,7 +1,5 @@
--- This is custom system prompt for Copilot adapter
--- Base on https://github.com/olimorris/codecompanion.nvim/blob/e7d931ae027f9fdca2bd7c53aa0a8d3f8d620256/lua/codecompanion/config.lua#L639 and https://github.com/CopilotC-Nvim/CopilotChat.nvim/blob/d43fab67c328946fbf8e24fdcadfdb5410517e1f/lua/CopilotChat/prompts.lua#L5
-local SYSTEM_PROMPT = string.format(
-  [[You are an AI programming assistant named "LLM".
+local CONSTANTS = {
+  SYSTEM_FMT = [[You are an AI programming assistant named "LLM".
 You are currently plugged in to the Neovim text editor on a user's machine.
 
 Your tasks include:
@@ -38,10 +36,8 @@ When given a task:
 4. You can only give one reply for each conversation turn.
 5. The active document is the source code the user is looking at right now.
 ]],
-  vim.loop.os_uname().sysname
-)
-local COPILOT_EXPLAIN = string.format(
-  [[You are a world-class coding tutor. Your code explanations perfectly balance high-level concepts and granular details. Your approach ensures that students not only understand how to write code, but also grasp the underlying principles that guide effective programming.
+
+  COPILOT_EXPLAIN = [[You are a world-class coding tutor. Your code explanations perfectly balance high-level concepts and granular details. Your approach ensures that students not only understand how to write code, but also grasp the underlying principles that guide effective programming.
 When asked for your name, you must respond with "LLM".
 Follow the user's requirements carefully & to the letter.
 Your expertise is strictly limited to software development topics.
@@ -67,10 +63,9 @@ Focus on being clear, helpful, and thorough without assuming extensive prior kno
 Use developer-friendly terms and analogies in your explanations.
 Identify 'gotchas' or less obvious parts of the code that might trip up someone new.
 Provide clear and relevant examples aligned with any provided context.
-]]
-)
-local COPILOT_REVIEW = string.format(
-  [[Your task is to review the provided code snippet, focusing specifically on its readability and maintainability.
+]],
+
+  COPILOT_REVIEW = [[Your task is to review the provided code snippet, focusing specifically on its readability and maintainability.
 Identify any issues related to:
 - Naming conventions that are unclear, misleading or doesn't follow conventions for the language being used.
 - The presence of unnecessary comments, or the lack of necessary ones.
@@ -89,10 +84,9 @@ Format your feedback as follows:
 - Provide a specific suggestion for improvement.
  
 If the code snippet has no readability issues, simply confirm that the code is clear and well-written as is.
-]]
-)
-local COPILOT_REFACTOR = string.format(
-  [[Your task is to refactor the provided code snippet, focusing specifically on its readability and maintainability.
+]],
+
+  COPILOT_REFACTOR = [[Your task is to refactor the provided code snippet, focusing specifically on its readability and maintainability.
 Identify any issues related to:
 - Naming conventions that are unclear, misleading or doesn't follow conventions for the language being used.
 - The presence of unnecessary comments, or the lack of necessary ones.
@@ -101,31 +95,144 @@ Identify any issues related to:
 - The use of excessively long names for variables or functions.
 - Any inconsistencies in naming, formatting, or overall coding style.
 - Repetitive code patterns that could be more efficiently handled through abstraction or optimization.
-]]
-)
-local AGENT_PROMPT = string.format(
-  [[You are an agent, please keep going until the user's query is completely resolved, before ending your turn and yielding back to the user. Only terminate your turn when you are sure that the problem is solved. If you are not sure about file content or codebase structure pertaining to the user's request, use your tools to read files and gather the relevant information: do NOT guess or make up an answer. You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only, as this can impair your ability to solve the problem and think insightfully.
-]]
-)
+]],
+
+  AGENT = [[You are an agent, please keep going until the user's query is completely resolved, before ending your turn and yielding back to the user. Only terminate your turn when you are sure that the problem is solved. If you are not sure about file content or codebase structure pertaining to the user's request, use your tools to read files and gather the relevant information: do NOT guess or make up an answer. You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only, as this can impair your ability to solve the problem and think insightfully.
+]],
+
+  COT = {
+    PLAN = [[DO NOT WRITE ANY CODE YET.
+
+Your task is to act as an expert software architect and create a comprehensive implementation plan.
+
+First, think step-by-step. Then, provide a detailed pseudocode plan that outlines the solution.
+
+Your plan should include:
+1.  A high-level summary of the proposed approach.
+2.  A breakdown of the required logic into sequential steps.
+3.  Identification of any new functions, classes, or components that should be created.
+4.  Consideration of how the changes will interact with existing code.
+5.  A list of potential edge cases and error conditions to handle.
+
+<!-- Be sure to share any relevant files -->
+<!-- Your task here -->]],
+
+    REVIEW = [[Now, act as a senior technical lead reviewing the previous plan. Your goal is to refine it into a final, highly-detailed specification that another AI can implement flawlessly.
+
+Critically evaluate the plan by answering the following questions:
+1.  What are the strengths and weaknesses of the proposed approach?
+2.  Are there any alternative approaches? If so, what are their trade-offs?
+3.  What potential risks, edge cases, or dependencies did the initial plan miss?
+4.  How can the pseudocode be made more specific and closer to the target language's syntax and conventions?
+
+After your analysis, provide a final, revised pseudocode plan. This new plan should incorporate your improvements, be extremely detailed, and leave no room for ambiguity.]],
+
+    IMPLEMENT = [[Your task is to write the code based on the final implementation plan that we discussed. Adhere strictly to the plan and do not introduce any new logic.
+
+**Instructions:**
+1.  Implement the plan.
+2.  Generate only the code. Do not include explanations or conversational text.
+3.  Use Markdown code blocks for the code (use 4 backticks instead of 3)
+4.  If you are modifying an existing file, include a comment with its path (e.g., `// filepath: src/utils/helpers.js`).
+5.  Use comments like `// ...existing code...` to indicate where the new code should be placed within existing files.
+
+**IMPORTANT:**
+- Follow the plan exactly.
+- Ensure comments are correct for the programming language.]],
+  },
+
+  USER = {
+    EXPLAIN = "Please explain how the following code works:",
+    EXPLAIN_SIMPLE = "Please explain how the following code works.",
+    COMMIT = "Write commit message with commitizen convention. Write clear, informative commit messages that explain the 'what' and 'why' behind changes, not just the 'how'.",
+    COMMIT_STAGED = "Write commit message for the change with commitizen convention. Write clear, informative commit messages that explain the 'what' and 'why' behind changes, not just the 'how'.",
+    DOC_INLINE = "Please provide documentation in comment code for the following code and suggest to have better naming to improve readability.",
+    DOC = "Please brief how it works and provide documentation in comment code for the following code. Also suggest to have better naming to improve readability.",
+    REVIEW = "Please review the following code and provide suggestions for improvement then refactor the following code to improve its clarity and readability:",
+    REVIEW_SIMPLE = "Please review the following code and provide suggestions for improvement then refactor the following code to improve its clarity and readability.",
+    REFACTOR = "Please refactor the following code to improve its clarity and readability:",
+    REFACTOR_SIMPLE = "Please refactor the following code to improve its clarity and readability.",
+    NAMING = "Please provide better names for the following variables and functions:",
+    NAMING_SIMPLE = "Please provide better names for the following variables and functions.",
+  },
+}
+
+local SYSTEM_PROMPT = string.format(CONSTANTS.SYSTEM_FMT, vim.loop.os_uname().sysname)
+
+local function with_code(text)
+  return function(context)
+    local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+    return text .. "\n\n```" .. context.filetype .. "\n" .. code .. "\n```\n\n"
+  end
+end
+
+local function git_template(text, args)
+  return function()
+    return text .. "\n\n```\n" .. vim.fn.system("git diff " .. (args or "")) .. "\n```"
+  end
+end
 
 local PROMPT_LIBRARY = {
-  -- Custom the default prompt
+  ["Chain-of-Thought"] = {
+    strategy = "workflow",
+    description = "Use a CoT workflow to plan and write code",
+    opts = {
+      -- adapter = {
+      --   name = "copilot",
+      --   model = "claude-haiku-4.5",
+      -- },
+    },
+    prompts = {
+      {
+        {
+          role = "user",
+          content = CONSTANTS.COT.PLAN,
+          opts = {
+            auto_submit = false,
+          },
+        },
+      },
+      {
+        {
+          role = "user",
+          content = CONSTANTS.COT.REVIEW,
+          opts = {
+            -- adapter = {
+            --   name = "copilot",
+            --   model = "claude-sonnet-4.5",
+            -- },
+            auto_submit = true,
+          },
+        },
+      },
+      {
+        {
+          role = "user",
+          content = CONSTANTS.COT.IMPLEMENT,
+          opts = {
+            -- adapter = {
+            --   name = "copilot",
+            --   model = "claude-haiku-4.5",
+            -- },
+            auto_submit = true,
+          },
+        },
+      },
+    },
+  },
+
   ["Generate a Commit Message"] = {
     prompts = {
       {
         role = "user",
-        content = function()
-          return "Write commit message with commitizen convention. Write clear, informative commit messages that explain the 'what' and 'why' behind changes, not just the 'how'."
-            .. "\n\n```\n"
-            .. vim.fn.system("git diff")
-            .. "\n```"
-        end,
+        content = git_template(CONSTANTS.USER.COMMIT, ""),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Explain"] = {
     strategy = "chat",
     description = "Explain how code in a buffer works",
@@ -140,29 +247,21 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "system",
-        content = COPILOT_EXPLAIN,
+        content = CONSTANTS.COPILOT_EXPLAIN,
         opts = {
           visible = false,
         },
       },
       {
         role = "user",
-        content = function(context)
-          local actions = require("codecompanion.helpers.actions")
-          local code = actions.get_code(context.start_line, context.end_line)
-
-          return "Please explain how the following code works:\n\n```"
-            .. context.filetype
-            .. "\n"
-            .. code
-            .. "\n```\n\n"
-        end,
+        content = with_code(CONSTANTS.USER.EXPLAIN),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Explain Code"] = {
     strategy = "chat",
     description = "Explain how code works",
@@ -174,18 +273,18 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "system",
-        content = COPILOT_EXPLAIN,
+        content = CONSTANTS.COPILOT_EXPLAIN,
         opts = {
           visible = false,
         },
       },
       {
         role = "user",
-        content = [[Please explain how the following code works.]],
+        content = CONSTANTS.USER.EXPLAIN_SIMPLE,
       },
     },
   },
-  -- Add custom prompts
+
   ["Generate a Commit Message for Staged"] = {
     strategy = "chat",
     description = "Generate a commit message for staged change",
@@ -197,18 +296,14 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "user",
-        content = function()
-          return "Write commit message for the change with commitizen convention. Write clear, informative commit messages that explain the 'what' and 'why' behind changes, not just the 'how'."
-            .. "\n\n```\n"
-            .. vim.fn.system("git diff --staged")
-            .. "\n```"
-        end,
+        content = git_template(CONSTANTS.USER.COMMIT_STAGED, "--staged"),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Inline Document"] = {
     strategy = "inline",
     description = "Add documentation for code.",
@@ -222,21 +317,14 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "user",
-        content = function(context)
-          local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-
-          return "Please provide documentation in comment code for the following code and suggest to have better naming to improve readability.\n\n```"
-            .. context.filetype
-            .. "\n"
-            .. code
-            .. "\n```\n\n"
-        end,
+        content = with_code(CONSTANTS.USER.DOC_INLINE),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Document"] = {
     strategy = "chat",
     description = "Write documentation for code.",
@@ -250,21 +338,14 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "user",
-        content = function(context)
-          local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-
-          return "Please brief how it works and provide documentation in comment code for the following code. Also suggest to have better naming to improve readability.\n\n```"
-            .. context.filetype
-            .. "\n"
-            .. code
-            .. "\n```\n\n"
-        end,
+        content = with_code(CONSTANTS.USER.DOC),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Review"] = {
     strategy = "chat",
     description = "Review the provided code snippet.",
@@ -278,28 +359,21 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "system",
-        content = COPILOT_REVIEW,
+        content = CONSTANTS.COPILOT_REVIEW,
         opts = {
           visible = false,
         },
       },
       {
         role = "user",
-        content = function(context)
-          local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-
-          return "Please review the following code and provide suggestions for improvement then refactor the following code to improve its clarity and readability:\n\n```"
-            .. context.filetype
-            .. "\n"
-            .. code
-            .. "\n```\n\n"
-        end,
+        content = with_code(CONSTANTS.USER.REVIEW),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Review Code"] = {
     strategy = "chat",
     description = "Review code and provide suggestions for improvement.",
@@ -311,17 +385,18 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "system",
-        content = COPILOT_REVIEW,
+        content = CONSTANTS.COPILOT_REVIEW,
         opts = {
           visible = false,
         },
       },
       {
         role = "user",
-        content = "Please review the following code and provide suggestions for improvement then refactor the following code to improve its clarity and readability.",
+        content = CONSTANTS.USER.REVIEW_SIMPLE,
       },
     },
   },
+
   ["Refactor"] = {
     strategy = "inline",
     description = "Refactor the provided code snippet.",
@@ -335,28 +410,21 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "system",
-        content = COPILOT_REFACTOR,
+        content = CONSTANTS.COPILOT_REFACTOR,
         opts = {
           visible = false,
         },
       },
       {
         role = "user",
-        content = function(context)
-          local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-
-          return "Please refactor the following code to improve its clarity and readability:\n\n```"
-            .. context.filetype
-            .. "\n"
-            .. code
-            .. "\n```\n\n"
-        end,
+        content = with_code(CONSTANTS.USER.REFACTOR),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Refactor Code"] = {
     strategy = "chat",
     description = "Refactor the provided code snippet.",
@@ -368,17 +436,18 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "system",
-        content = COPILOT_REFACTOR,
+        content = CONSTANTS.COPILOT_REFACTOR,
         opts = {
           visible = false,
         },
       },
       {
         role = "user",
-        content = "Please refactor the following code to improve its clarity and readability.",
+        content = CONSTANTS.USER.REFACTOR_SIMPLE,
       },
     },
   },
+
   ["Naming"] = {
     strategy = "inline",
     description = "Give betting naming for the provided code snippet.",
@@ -392,21 +461,14 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "user",
-        content = function(context)
-          local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-
-          return "Please provide better names for the following variables and functions:\n\n```"
-            .. context.filetype
-            .. "\n"
-            .. code
-            .. "\n```\n\n"
-        end,
+        content = with_code(CONSTANTS.USER.NAMING),
         opts = {
           contains_code = true,
         },
       },
     },
   },
+
   ["Better Naming"] = {
     strategy = "chat",
     description = "Give betting naming for the provided code snippet.",
@@ -418,7 +480,7 @@ local PROMPT_LIBRARY = {
     prompts = {
       {
         role = "user",
-        content = "Please provide better names for the following variables and functions.",
+        content = CONSTANTS.USER.NAMING_SIMPLE,
       },
     },
   },
@@ -427,5 +489,5 @@ local PROMPT_LIBRARY = {
 return {
   SYSTEM_PROMPT = SYSTEM_PROMPT,
   PROMPT_LIBRARY = PROMPT_LIBRARY,
-  AGENT_PROMPT = AGENT_PROMPT,
+  AGENT_PROMPT = CONSTANTS.AGENT,
 }
