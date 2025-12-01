@@ -11,8 +11,8 @@ local CONSTANTS = {
 }
 
 PROMPT_LIBRARY = {
-  ["Generate a Commit Message for Staged"] = {
-    strategy = CONSTANTS.STRATEGY.WORKFLOW,
+  ["Commit and Push"] = {
+    strategy = CONSTANTS.STRATEGY.CHAT,
     description = "Generate a commit message for staged changes",
     opts = {
       adapter = {
@@ -21,40 +21,23 @@ PROMPT_LIBRARY = {
       },
       -- auto_submit = true,
       is_slash_cmd = true,
-      short_name = "commit-staged",
+      short_name = "commit-and-push",
     },
     prompts = {
       {
-        {
-          role = CONSTANTS.USER.ROLE,
-          content = function()
-            local diff = vim.system({ "git", "diff", "--no-ext-diff", "--staged" }, { text = true }):wait()
-            return string.format(
-              [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me:
+        role = CONSTANTS.USER.ROLE,
+        content = function()
+          return [[⚠️ CRITICAL: Do NOT use `git add` or stage any files. The files are already staged.
 
-````diff
-%s
-````
-]],
-              diff.stdout
-            )
-          end,
-          opts = {
-            auto_submit = true,
-            contains_code = true,
-          },
-        },
-      },
-      {
-        {
-          role = CONSTANTS.USER.ROLE,
-          content = function()
-            vim.g.codecompanion_yolo_mode = true
-            return [[ONLY COMMIT the staged changes with the generated message and push to the remote. DO NOT ADD files to staging—they're already there. Use the @{cmd_runner} tool to execute the git commands.]]
-          end,
-          opts = {
-            auto_submit = false,
-          },
+Execute these commands in order:
+1. `git commit -m "..."` (use the generated message above)
+2. `git push`
+
+Do NOT execute any other git commands. Use the the @{cmd_runner} tool tool.]]
+        end,
+        opts = {
+          auto_submit = true,
+          contains_code = true,
         },
       },
     },
