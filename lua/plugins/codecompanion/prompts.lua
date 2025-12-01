@@ -16,7 +16,7 @@ PROMPT_LIBRARY = {
     description = "Generate a commit message",
     opts = {
       is_slash_cmd = true,
-      short_name = "staged-commit",
+      short_name = "commit",
       auto_submit = true,
       adapter = {
         name = "copilot",
@@ -25,23 +25,21 @@ PROMPT_LIBRARY = {
     },
     prompts = {
       {
-        {
-          role = CONSTANTS.USER_ROLE,
-          content = function()
-            local diff = vim.system({ "git", "diff", "--no-ext-diff", "--staged" }, { text = true }):wait()
-            return string.format(
-              [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me:
+        role = CONSTANTS.USER.ROLE,
+        content = function()
+          local diff = vim.system({ "git", "diff", "--no-ext-diff", "--staged" }, { text = true }):wait()
+          return string.format(
+            [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me:
 
 ````diff
 %s
 ````
 ]],
-              diff.stdout
-            )
-          end,
-          opts = {
-            contains_code = true,
-          },
+            diff.stdout
+          )
+        end,
+        opts = {
+          contains_code = true,
         },
       },
     },
@@ -66,10 +64,6 @@ Execute these commands in order:
 
 Do NOT execute any other git commands. Use the the @{cmd_runner} tool tool.]]
         end,
-        opts = {
-          auto_submit = true,
-          contains_code = true,
-        },
       },
     },
   },
