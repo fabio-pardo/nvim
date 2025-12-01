@@ -1,5 +1,5 @@
 ---@diagnostic disable: undefined-doc-name
-local ADAPTER = "copilot"
+local ADAPTER = "gemini"
 local GEMINI_DEFAULT_MODEL = "gemini-3-pro-preview"
 local COPILOT_DEFAULT_MODEL = GEMINI_DEFAULT_MODEL
 
