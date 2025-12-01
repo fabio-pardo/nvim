@@ -1,7 +1,7 @@
 local DEPS = require("plugins.codecompanion.dependencies")
 local KEYS = require("plugins.codecompanion.keys")
-local SPINNER = require("plugins.codecompanion.spinner")
 local OPTS = require("plugins.codecompanion.opts")
+local SPINNER = require("plugins.codecompanion.spinner")
 
 return {
   "olimorris/codecompanion.nvim",

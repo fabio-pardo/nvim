@@ -1,12 +1,22 @@
 ---@diagnostic disable: undefined-doc-name
-local ADAPTER = "gemini"
+local ADAPTER = "copilot"
 local GEMINI_DEFAULT_MODEL = "gemini-3-pro-preview"
+local COPILOT_DEFAULT_MODEL = GEMINI_DEFAULT_MODEL
 
 local PROMPTS = require("plugins.codecompanion.prompts")
 
 local OPTS = {
   adapters = {
     http = {
+      copilot = function()
+        return require("codecompanion.adapters").extend("copilot", {
+          schema = {
+            model = {
+              default = COPILOT_DEFAULT_MODEL,
+            },
+          },
+        })
+      end,
       gemini = function()
         return require("codecompanion.adapters").extend("gemini", {
           env = {
@@ -22,6 +32,13 @@ local OPTS = {
       openrouter = function()
         return require("plugins.codecompanion.openrouter")
       end,
+      tavily = function()
+        return require("codecompanion.adapters").extend("tavily", {
+          env = {
+            api_key = "cmd:op read op://personal/Tavily_API/credential --no-newline",
+          },
+        })
+      end,
     },
   },
   display = {
@@ -30,7 +47,7 @@ local OPTS = {
     },
     chat = {
       fold_context = false, -- Fold context messages in the chat buffer?
-      intro_message = "Welcome to CodeCompanion ✨! Press ? for options",
+      intro_message = "",
       separator = "─", -- The separator between the different messages in the chat buffer
       show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
       show_header_separator = false, -- Show header separators in the chat buffer? Set this to false if you're using an external markdown formatting plugin
