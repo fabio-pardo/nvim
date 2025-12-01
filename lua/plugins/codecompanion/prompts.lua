@@ -21,7 +21,7 @@ PROMPT_LIBRARY = {
       },
       -- auto_submit = true,
       is_slash_cmd = true,
-      short_name = "staged-commit",
+      short_name = "commit-staged",
     },
     prompts = {
       {
@@ -53,7 +53,7 @@ PROMPT_LIBRARY = {
             return [[ONLY COMMIT the staged changes with the generated message and push to the remote. DO NOT ADD files to staging—they're already there. Use the @{cmd_runner} tool to execute the git commands.]]
           end,
           opts = {
-            auto_submit = true,
+            auto_submit = false,
           },
         },
       },
