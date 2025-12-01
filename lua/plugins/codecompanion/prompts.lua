@@ -11,14 +11,45 @@ local CONSTANTS = {
 }
 
 PROMPT_LIBRARY = {
-  ["Commit and Push"] = {
+  ["Generate a Commit Message"] = {
     strategy = CONSTANTS.STRATEGY.CHAT,
-    description = "Generate a commit message for staged changes",
+    description = "Generate a commit message",
     opts = {
+      is_slash_cmd = true,
+      short_name = "staged-commit",
+      auto_submit = true,
       adapter = {
         name = "copilot",
         model = "claude-haiku-4.5",
       },
+    },
+    prompts = {
+      {
+        {
+          role = CONSTANTS.USER_ROLE,
+          content = function()
+            local diff = vim.system({ "git", "diff", "--no-ext-diff", "--staged" }, { text = true }):wait()
+            return string.format(
+              [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me:
+
+````diff
+%s
+````
+]],
+              diff.stdout
+            )
+          end,
+          opts = {
+            contains_code = true,
+          },
+        },
+      },
+    },
+  },
+  ["Commit and Push"] = {
+    strategy = CONSTANTS.STRATEGY.CHAT,
+    description = "Generate a commit message for staged changes",
+    opts = {
       -- auto_submit = true,
       is_slash_cmd = true,
       short_name = "commit-and-push",
