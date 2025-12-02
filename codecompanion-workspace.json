@@ -35,7 +35,19 @@
       "system_prompt": "Focus on UI components like statuslines, bufferlines, and editor utilities like search/replace and key management.",
       "data": [
         "plugins.ui",
-        "plugins.editor"
+        "plugins.editor",
+        "plugins.yanky"
+      ]
+    },
+    {
+      "name": "Coding & Syntax",
+      "description": "Core coding features including syntax highlighting, completion, linting, and text objects.",
+      "system_prompt": "Focus on code editing features, syntax trees, autocompletion, and linting configurations.",
+      "data": [
+        "plugins.coding",
+        "plugins.completion",
+        "plugins.linting",
+        "plugins.treesitter"
       ]
     },
     {
@@ -46,7 +58,6 @@
         "cc.main",
         "cc.opts",
         "cc.prompts",
-        "cc.keys",
         "cc.deps",
         "cc.spinner",
         "cc.openrouter",
@@ -159,11 +170,6 @@
       "path": "lua/plugins/codecompanion/prompts.lua",
       "description": "Custom prompts for CodeCompanion"
     },
-    "cc.keys": {
-      "type": "file",
-      "path": "lua/plugins/codecompanion/keys.lua",
-      "description": "Keybindings specific to CodeCompanion"
-    },
     "cc.deps": {
       "type": "file",
       "path": "lua/plugins/codecompanion/dependencies.lua",
@@ -223,6 +229,31 @@
       "type": "file",
       "path": "lua/plugins/venv-selector.lua",
       "description": "Python virtual environment selector configuration"
+    },
+    "plugins.coding": {
+      "type": "file",
+      "path": "lua/plugins/coding.lua",
+      "description": "Coding utilities including autopairs, comments, and mini.ai"
+    },
+    "plugins.completion": {
+      "type": "file",
+      "path": "lua/plugins/completion.lua",
+      "description": "Completion configuration using blink.cmp"
+    },
+    "plugins.linting": {
+      "type": "file",
+      "path": "lua/plugins/linting.lua",
+      "description": "Linting configuration using nvim-lint"
+    },
+    "plugins.treesitter": {
+      "type": "file",
+      "path": "lua/plugins/treesitter.lua",
+      "description": "Treesitter configuration for syntax highlighting and text objects"
+    },
+    "plugins.yanky": {
+      "type": "file",
+      "path": "lua/plugins/yanky.lua",
+      "description": "Clipboard manager with history"
     }
   }
 }
