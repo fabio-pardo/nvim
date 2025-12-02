@@ -15,7 +15,6 @@
         "core.keymaps",
         "core.autocmds",
         "core.lazy",
-        "core.lazyvim_json",
         "core.readme",
         "lazyvim.docs"
       ]
@@ -109,11 +108,6 @@
       "type": "file",
       "path": "lua/config/lazy.lua",
       "description": "Lazy.nvim package manager bootstrap and configuration"
-    },
-    "core.lazyvim_json": {
-      "type": "file",
-      "path": "lazyvim.json",
-      "description": "LazyVim configuration and extras"
     },
     "core.readme": {
       "type": "file",

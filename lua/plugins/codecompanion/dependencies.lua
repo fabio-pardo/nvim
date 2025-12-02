@@ -28,10 +28,11 @@ local DEPS = {
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" },
+    ft = { "codecompanion", "markdown" },
     config = function()
       require("render-markdown").setup({
         completions = { blink = { enabled = true } },
-        file_types = { "codecompanion", "markdown", "nvim-pack" },
+        file_types = { "codecompanion", "markdown" },
         heading = {
           sign = false,
           icons = { "󰪥 ", "󰺕 ", " ", " ", " ", "" },

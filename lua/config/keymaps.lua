@@ -2,6 +2,7 @@
 -- Migrated from LazyVim defaults + custom additions
 
 local map = vim.keymap.set
+local ai_prefix = vim.g.ai_prefix_key or "<leader>a"
 
 --------------------------------------------------------------------------------
 -- Better Movement
@@ -11,16 +12,6 @@ map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true
 map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-
---------------------------------------------------------------------------------
--- Window Navigation (handled by vim-tmux-navigator)
---------------------------------------------------------------------------------
--- These are set by vim-tmux-navigator plugin, but we define them here for
--- non-tmux environments as fallback
--- map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
--- map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
--- map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
--- map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 
 --------------------------------------------------------------------------------
 -- Window Resize
@@ -218,7 +209,8 @@ local wk = require("which-key")
 wk.add({
   -- General groups
   { "<leader>o", group = "Obsidian", icon = "🔮" },
-  { "<leader>a", group = "AI Code Companion", icon = "🤖" },
+  { ai_prefix, group = "AI Code Companion", icon = "🤖" },
+
   { "<leader>b", group = "Buffer" },
   { "<leader>c", group = "Code" },
   { "<leader>d", group = "Debug" },
@@ -230,6 +222,63 @@ wk.add({
   { "<leader>w", group = "Windows" },
   { "<leader>x", group = "Diagnostics/Quickfix" },
   { "<leader><tab>", group = "Tabs" },
+
+  -- CodeCompanion keymaps
+  {
+    mode = { "n", "v" },
+    { ai_prefix .. "p", "<cmd>CodeCompanionActions<cr>", desc = "Code Companion - Prompt Actions" },
+  },
+  {
+    mode = { "v" },
+    {
+      ai_prefix .. "A",
+      function()
+        -- Exit visual mode first to set the '< and '> marks
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "nx", false)
+
+        -- Get the visual selection context
+        local context = require("codecompanion.utils.context").get(vim.api.nvim_get_current_buf(), { range = 2 })
+        local content = table.concat(context.lines, "\n")
+
+        local cc = require("codecompanion")
+        local chat = cc.last_chat()
+
+        if not chat then
+          -- Create new chat without visual context insertion
+          -- This works around a bug where Add duplicates visual selection when creating a new chat
+          chat = cc.chat({ context = { is_visual = false } })
+          if not chat then
+            return vim.notify("Could not create chat buffer", vim.log.levels.WARN)
+          end
+        end
+
+        -- Add the code with the proper "Here is some code from..." format
+        chat:add_buf_message({
+          role = require("codecompanion.config").constants.USER_ROLE,
+          content = "Here is some code from "
+            .. context.filename
+            .. ":\n\n```"
+            .. context.filetype
+            .. "\n"
+            .. content
+            .. "\n```\n",
+        })
+
+        -- Open the chat buffer and focus it
+        chat.ui:open()
+        if chat.ui.winnr and vim.api.nvim_win_is_valid(chat.ui.winnr) then
+          vim.api.nvim_set_current_win(chat.ui.winnr)
+        end
+      end,
+      desc = "Code Companion Add to Chat",
+    },
+  },
+  {
+    mode = { "n" },
+    { ai_prefix .. "a", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Code Companion Toggle" },
+    { ai_prefix .. "m", "<cmd>CodeCompanion /commit<cr>", desc = "Code Companion - Git commit message" },
+    { ai_prefix .. "M", "<cmd>CodeCompanion /commit-push<cr>", desc = "Code Companion - Commit and push" },
+  },
 
   -- Marks keymaps
   {
@@ -260,14 +309,3 @@ wk.add({
     { "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", desc = "Navigate to previous Tmux pane" },
   },
 })
-
---------------------------------------------------------------------------------
--- Snacks Toggles (these require Snacks to be loaded)
---------------------------------------------------------------------------------
--- These will be set up by snacks.nvim plugin spec
--- See lua/plugins/snacks.lua for toggle keymaps like:
--- <leader>uf - Toggle format on save
--- <leader>us - Toggle spelling
--- <leader>uw - Toggle wrap
--- <leader>ud - Toggle diagnostics
--- etc.
