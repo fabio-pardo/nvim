@@ -28,9 +28,15 @@ local KEYS = {
 
   -- Custom prompts
   {
-    mapping_key_prefix .. "M",
+    mapping_key_prefix .. "m",
     "<cmd>CodeCompanion /commit<cr>",
-    desc = "Code Companion - Git commit message (staged)",
+    desc = "Code Companion - Git commit message",
+    mode = { "n" },
+  },
+  {
+    mapping_key_prefix .. "M",
+    "<cmd>CodeCompanion /commit-push<cr>",
+    desc = "Code Companion - Commit and push",
     mode = { "n" },
   },
 }
