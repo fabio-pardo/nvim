@@ -26,17 +26,23 @@ Requirements:
 - Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
 - Keep the subject line under 72 characters
 - Explain the 'what' and 'why', not just the 'how'
-- If there are breaking changes, add a BREAKING CHANGE footer]],
+- If there are breaking changes, add a BREAKING CHANGE footer
+
+⚠️ IMPORTANT:
+- Do NOT run any git commands or use any tools
+- Do NOT check repository status
+- Simply analyse the diff provided below and respond with the commit message only]],
 
   COMMIT_AND_PUSH = [[⚠️ CRITICAL INSTRUCTIONS:
 - Do NOT use `git add` or stage any files - they are already staged
 - Do NOT modify any files
+- Do NOT run `git status`, `git diff`, or any other git commands except those listed below
 
-Execute these commands in order using the @cmd_runner tool:
+Execute ONLY these commands in order using the @{cmd_runner} tool:
 1. `git commit -m "<commit_message>"` - use the commit message from the previous response
 2. `git push`
 
-Do NOT execute any other git commands.]],
+Do NOT execute any other commands.]],
 }
 
 --------------------------------------------------------------------------------
@@ -44,17 +50,14 @@ Do NOT execute any other git commands.]],
 --------------------------------------------------------------------------------
 
 ---Get the staged diff from git
----@return string
+---@return string|nil diff content, or nil if no staged changes
 local function get_staged_diff()
   local result = vim.system({ "git", "diff", "--no-ext-diff", "--staged" }, { text = true }):wait()
-  return result.stdout or ""
-end
-
----Check if there are staged changes
----@return boolean
-local function has_staged_changes()
-  local result = vim.system({ "git", "diff", "--cached", "--quiet" }, { text = true }):wait()
-  return result.code ~= 0
+  local diff = result.stdout or ""
+  if diff == "" then
+    return nil
+  end
+  return diff
 end
 
 --------------------------------------------------------------------------------
@@ -81,7 +84,8 @@ M.PROMPT_LIBRARY = {
       {
         role = ROLE.USER,
         content = function()
-          if not has_staged_changes() then
+          local diff = get_staged_diff()
+          if not diff then
             return "No staged changes found. Please stage some changes first with `git add`."
           end
 
@@ -92,7 +96,7 @@ M.PROMPT_LIBRARY = {
 %s
 ````]],
             PROMPTS.COMMIT_MESSAGE,
-            get_staged_diff()
+            diff
           )
         end,
         opts = {
@@ -109,8 +113,11 @@ M.PROMPT_LIBRARY = {
     strategy = STRATEGY.WORKFLOW,
     description = "Generate commit message, commit, and push in one go",
     opts = {
-      is_slash_cmd = true,
       short_name = "commit-push",
+      adapter = {
+        name = "copilot",
+        model = "gpt-4o",
+      },
     },
     prompts = {
       -- Step 1: Generate the commit message
@@ -118,7 +125,8 @@ M.PROMPT_LIBRARY = {
         {
           role = ROLE.USER,
           content = function()
-            if not has_staged_changes() then
+            local diff = get_staged_diff()
+            if not diff then
               return "No staged changes found. Please stage some changes first with `git add`."
             end
 
@@ -129,11 +137,12 @@ M.PROMPT_LIBRARY = {
 %s
 ````]],
               PROMPTS.COMMIT_MESSAGE,
-              get_staged_diff()
+              diff
             )
           end,
           opts = {
             contains_code = true,
+            auto_submit = true,
           },
         },
       },
@@ -142,6 +151,9 @@ M.PROMPT_LIBRARY = {
         {
           role = ROLE.USER,
           content = PROMPTS.COMMIT_AND_PUSH,
+          opts = {
+            auto_submit = true,
+          },
         },
       },
     },
