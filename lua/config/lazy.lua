@@ -1,3 +1,10 @@
+-- Load options first (before plugins)
+require("config.options")
+
+-- Load autocmds
+require("config.autocmds")
+
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -14,14 +21,29 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- MIGRATION: LazyVim removed - all plugins now explicit
+    -- To revert, uncomment the line below and comment out { import = "plugins" }
+    -- { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "plugins" },
   },
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "gruvbox" } },
-  -- automatically check for plugin updates
   checker = { enabled = true },
+  performance = {
+    rtp = {
+      -- Disable some built-in plugins we don't need
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
 })
