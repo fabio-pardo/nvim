@@ -227,6 +227,7 @@ wk.add({
   {
     mode = { "n", "v" },
     { ai_prefix .. "p", "<cmd>CodeCompanionActions<cr>", desc = "Code Companion - Prompt Actions" },
+    { ai_prefix .. "a", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Code Companion Toggle" },
   },
   {
     mode = { "v" },
