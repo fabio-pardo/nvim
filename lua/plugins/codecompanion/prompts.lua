@@ -2,7 +2,12 @@ local CONSTANTS = {
   USER = {
     ROLE = "user",
     COMMIT_STAGED = "Write commit message for the change with commitizen convention. Write clear, informative commit messages that explain the 'what' and 'why' behind changes, not just the 'how'.",
-    COMMIT_PUSH = "Using @{cmd_runner}, generate the git commands to commit the changes with the generated message and push to the remote.",
+    COMMIT_PUSH = [[⚠️ CRITICAL: Do NOT use `git add` or stage any files. The files are already staged.
+Execute these commands in order:
+1. `git commit -m "..."` (use the generated message above)
+2. `git push`
+
+Do NOT execute any other git commands. Use the the @{cmd_runner} tool tool.]],
   },
   STRATEGY = {
     CHAT = "chat",
@@ -57,13 +62,7 @@ PROMPT_LIBRARY = {
       {
         role = CONSTANTS.USER.ROLE,
         content = function()
-          return [[⚠️ CRITICAL: Do NOT use `git add` or stage any files. The files are already staged.
-
-Execute these commands in order:
-1. `git commit -m "..."` (use the generated message above)
-2. `git push`
-
-Do NOT execute any other git commands. Use the the @{cmd_runner} tool tool.]]
+          return CONSTANTS.USER.COMMIT_PUSH
         end,
       },
     },
