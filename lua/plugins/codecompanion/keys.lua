@@ -23,7 +23,7 @@ local KEYS = {
     mapping_key_prefix .. "p",
     "<cmd>CodeCompanionActions<cr>",
     desc = "Code Companion - Prompt Actions",
-    mode = { "n" },
+    mode = { "n", "v" },
   },
 
   -- Custom prompts

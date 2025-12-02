@@ -70,7 +70,7 @@ local OPTS = {
         -- Number of days after which chats are automatically deleted (0 to disable)
         expiration_days = 0,
         -- Picker interface (auto resolved to a valid picker)
-        picker = "default", --- ("telescope", "snacks", "fzf-lua", or "default")
+        picker = "snacks", --- ("telescope", "snacks", "fzf-lua", or "default")
         ---Optional filter function to control which chats are shown when browsing
         chat_filter = nil, -- function(chat_data) return boolean end
         -- Customize picker keymaps (optional)
@@ -83,9 +83,9 @@ local OPTS = {
         auto_generate_title = true,
         title_generation_opts = {
           ---Adapter for generating titles (defaults to current chat adapter)
-          adapter = nil, -- "copilot"
+          adapter = "copilot", -- "copilot"
           ---Model for generating titles (defaults to current chat model)
-          model = nil, -- "gpt-4o"
+          model = "gpt-4o", -- "gpt-4o"
           ---Number of user prompts after which to refresh the title (0 to disable)
           refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
           ---Maximum number of times to refresh the title (default: 3)
@@ -103,7 +103,7 @@ local OPTS = {
         ---Directory path to save the chats
         dir_to_save = vim.fn.stdpath("data") .. "/codecompanion-history",
         ---Enable detailed logging for history extension
-        enable_logging = false,
+        enable_logging = true,
 
         -- Summary system
         summary = {
@@ -113,8 +113,8 @@ local OPTS = {
           browse_summaries_keymap = "gbs",
 
           generation_opts = {
-            adapter = nil, -- defaults to current chat adapter
-            model = nil, -- defaults to current chat model
+            adapter = "copilot", -- defaults to current chat adapter
+            model = "gpt-4o", -- defaults to current chat model
             context_size = 90000, -- max tokens that the model supports
             include_references = true, -- include slash command content
             include_tool_outputs = true, -- include tool execution results

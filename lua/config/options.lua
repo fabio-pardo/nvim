@@ -132,7 +132,3 @@ opt.shortmess:append({ W = true, I = true, c = true, C = true }) -- Reduce messa
 opt.spelllang = { "en" }
 opt.spelloptions = "noplainbuffer"
 opt.formatoptions = "jcroqlnt" -- Format options
-
--- NOTE: These are LazyVim-specific and will need custom implementations after migration:
--- opt.formatexpr = "v:lua.LazyVim.format.formatexpr()"
--- opt.statuscolumn = [[%!v:lua.LazyVim.statuscolumn()]]
