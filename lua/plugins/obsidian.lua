@@ -88,24 +88,27 @@ return {
     })
   end,
   keys = {
-    { prefix .. "o", "<cmd>ObsidianOpen<CR>", desc = "Open on App" },
-    { prefix .. "g", "<cmd>ObsidianSearch<CR>", desc = "Grep" },
-    { prefix .. "n", "<cmd>ObsidianNew<CR>", desc = "New Note" },
-    { prefix .. "N", "<cmd>ObsidianNewFromTemplate<CR>", desc = "New Note (Template)" },
-    { prefix .. "<space>", "<cmd>ObsidianQuickSwitch<CR>", desc = "Find Files" },
-    { prefix .. "b", "<cmd>ObsidianBacklinks<CR>", desc = "Backlinks" },
-    { prefix .. "t", "<cmd>ObsidianTags<CR>", desc = "Tags" },
-    { prefix .. "T", "<cmd>ObsidianTemplate<CR>", desc = "Template" },
-    { prefix .. "L", "<cmd>ObsidianLink<CR>", mode = "v", desc = "Link" },
-    { prefix .. "l", "<cmd>ObsidianLinks<CR>", desc = "Links" },
-    { prefix .. "k", "<cmd>ObsidianLinkNew<CR>", mode = "v", desc = "New Link" }, -- Fixed: changed from 'l' to 'k'
-    { prefix .. "e", "<cmd>ObsidianExtractNote<CR>", mode = "v", desc = "Extract Note" },
-    { prefix .. "w", "<cmd>ObsidianWorkspace<CR>", desc = "Workspace" },
-    { prefix .. "r", "<cmd>ObsidianRename<CR>", desc = "Rename" },
-    { prefix .. "i", "<cmd>ObsidianPasteImg<CR>", desc = "Paste Image" },
-    { prefix .. "d", "<cmd>ObsidianDailies<CR>", desc = "Daily Notes" },
+    { prefix .. "o", "<cmd>Obsidian open<CR>", desc = "Open on App" },
+    { prefix .. "g", "<cmd>Obsidian search<CR>", desc = "Grep" },
+    { prefix .. "n", "<cmd>Obsidian new<CR>", desc = "New Note" },
+    { prefix .. "N", "<cmd>Obsidian new_from_template<CR>", desc = "New Note (Template)" },
+    { prefix .. "<space>", "<cmd>Obsidian quick_switch<CR>", desc = "Find Files" },
+    { prefix .. "b", "<cmd>Obsidian backlinks<CR>", desc = "Backlinks" },
+    { prefix .. "t", "<cmd>Obsidian tags<CR>", desc = "Tags" },
+    { prefix .. "T", "<cmd>Obsidian template<CR>", desc = "Template" },
+    { prefix .. "L", "<cmd>Obsidian link<CR>", mode = "v", desc = "Link" },
+    { prefix .. "l", "<cmd>Obsidian links<CR>", desc = "Links" },
+    { prefix .. "k", "<cmd>Obsidian link_new<CR>", mode = "v", desc = "New Link" },
+    { prefix .. "e", "<cmd>Obsidian extract_note<CR>", mode = "v", desc = "Extract Note" },
+    { prefix .. "w", "<cmd>Obsidian workspace<CR>", desc = "Workspace" },
+    { prefix .. "r", "<cmd>Obsidian rename<CR>", desc = "Rename" },
+    { prefix .. "i", "<cmd>Obsidian paste_img<CR>", desc = "Paste Image" },
+    { prefix .. "d", "<cmd>Obsidian dailies<CR>", desc = "Daily Notes" },
   },
   opts = {
+    -- Disable legacy commands (ObsidianX) in favour of new format (Obsidian x)
+    legacy_commands = false,
+
     workspaces = {
       {
         name = "notes",
@@ -274,14 +277,16 @@ return {
       parse_headers = true,
     },
 
-    -- Optional, sort search results by "path", "modified", "accessed", or "created".
-    -- The recommend value is "modified" and `true` for `sort_reversed`, which means, for example,
-    -- that `:Obsidian quick_switch` will show the notes sorted by latest modified time
-    sort_by = "modified",
-    sort_reversed = true,
-
-    -- Set the maximum number of lines to read from notes on disk when performing certain searches.
-    search_max_lines = 1000,
+    -- Search options
+    search = {
+      -- Sort search results by "path", "modified", "accessed", or "created".
+      -- The recommended value is "modified" and `true` for `sort_reversed`, which means, for example,
+      -- that `:Obsidian quick_switch` will show the notes sorted by latest modified time
+      sort_by = "modified",
+      sort_reversed = true,
+      -- Maximum number of lines to read from notes on disk when performing certain searches.
+      max_lines = 1000,
+    },
 
     -- Optional, determines how certain commands open notes. The valid options are:
     -- 1. "current" (the default) - to always open in the current window

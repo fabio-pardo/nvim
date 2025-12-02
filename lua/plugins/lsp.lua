@@ -134,8 +134,14 @@ return {
     opts = {
       ensure_installed = {
         -- Use Mason package names (not LSP server names)
-        "stylua",
+        "bash-language-server",
+        "lua-language-server",
+        "python-lsp-server",
+        "ruff",
+        "shellcheck",
         "shfmt",
+        "stylua",
+        "vectorcode",
       },
     },
     config = function(_, opts)
