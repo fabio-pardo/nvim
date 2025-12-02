@@ -276,7 +276,6 @@ wk.add({
   },
   {
     mode = { "n" },
-    { ai_prefix .. "a", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Code Companion Toggle" },
     { ai_prefix .. "m", "<cmd>CodeCompanion /commit<cr>", desc = "Code Companion - Git commit message" },
     { ai_prefix .. "M", "<cmd>CodeCompanion /commit-push<cr>", desc = "Code Companion - Commit and push" },
   },
