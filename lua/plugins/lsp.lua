@@ -134,10 +134,10 @@ return {
     opts = {
       ensure_installed = {
         -- Use Mason package names (not LSP server names)
+        "basedpyright", -- Python LSP
         "bash-language-server",
         "lua-language-server",
-        "python-lsp-server",
-        "ruff",
+        "ruff", -- Python linter/formatter (not LSP)
         "shellcheck",
         "shfmt",
         "stylua",
@@ -171,7 +171,10 @@ return {
     "mason-org/mason-lspconfig.nvim",
     lazy = true,
     opts = {
-      automatic_enable = true,
+      automatic_enable = {
+        -- Exclude ruff LSP - we use it as a linter/formatter instead
+        exclude = { "ruff" },
+      },
     },
   },
 }
