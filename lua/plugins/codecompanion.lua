@@ -1,4 +1,5 @@
 local DEPS = require("plugins.codecompanion.dependencies")
+local KEYS = require("plugins.codecompanion.keymaps")
 local OPTS = require("plugins.codecompanion.opts")
 local SPINNER = require("plugins.codecompanion.spinner")
 
@@ -10,4 +11,5 @@ return {
     require("codecompanion").setup(OPTS)
   end,
   dependencies = DEPS,
+  keys = KEYS,
 }

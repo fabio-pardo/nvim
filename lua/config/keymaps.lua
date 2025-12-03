@@ -2,7 +2,6 @@
 -- Migrated from LazyVim defaults + custom additions
 
 local map = vim.keymap.set
-local ai_prefix = vim.g.ai_prefix_key or "<leader>a"
 
 --------------------------------------------------------------------------------
 -- Better Movement
@@ -208,96 +207,18 @@ map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 local wk = require("which-key")
 wk.add({
   -- General groups
-  { "<leader>o", group = "Obsidian", icon = "🔮" },
-  { ai_prefix, group = "AI Code Companion", icon = "🤖" },
-
-  { "<leader>b", group = "Buffer" },
-  { "<leader>c", group = "Code" },
-  { "<leader>d", group = "Debug" },
-  { "<leader>f", group = "File/Find" },
-  { "<leader>g", group = "Git" },
-  { "<leader>q", group = "Quit/Session" },
-  { "<leader>s", group = "Search" },
-  { "<leader>u", group = "UI" },
-  { "<leader>w", group = "Windows" },
-  { "<leader>x", group = "Diagnostics/Quickfix" },
-  { "<leader><tab>", group = "Tabs" },
-  { "<leader>m", group = "Marks", icon = "📍" },
-
-  -- CodeCompanion keymaps
-  {
-    mode = { "n", "v" },
-    { ai_prefix .. "p", "<cmd>CodeCompanionActions<cr>", desc = "Code Companion - Prompt Actions" },
-    { ai_prefix .. "a", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Code Companion Toggle" },
-  },
-  {
-    mode = { "v" },
-    {
-      ai_prefix .. "A",
-      function()
-        -- Exit visual mode first to set the '< and '> marks
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "nx", false)
-
-        -- Get the visual selection context
-        local context = require("codecompanion.utils.context").get(vim.api.nvim_get_current_buf(), { range = 2 })
-        local content = table.concat(context.lines, "\n")
-
-        local cc = require("codecompanion")
-        local chat = cc.last_chat()
-
-        if not chat then
-          -- Create new chat without visual context insertion
-          -- This works around a bug where Add duplicates visual selection when creating a new chat
-          chat = cc.chat({ context = { is_visual = false } })
-          if not chat then
-            return vim.notify("Could not create chat buffer", vim.log.levels.WARN)
-          end
-        end
-
-        -- Add the code with the proper "Here is some code from..." format
-        chat:add_buf_message({
-          role = require("codecompanion.config").constants.USER_ROLE,
-          content = "Here is some code from "
-            .. context.filename
-            .. ":\n\n```"
-            .. context.filetype
-            .. "\n"
-            .. content
-            .. "\n```\n",
-        })
-
-        -- Open the chat buffer and focus it
-        chat.ui:open()
-        if chat.ui.winnr and vim.api.nvim_win_is_valid(chat.ui.winnr) then
-          vim.api.nvim_set_current_win(chat.ui.winnr)
-        end
-      end,
-      desc = "Code Companion Add to Chat",
-    },
-  },
-  {
-    mode = { "n" },
-    { ai_prefix .. "m", "<cmd>CodeCompanion /commit<cr>", desc = "Code Companion - Git commit message" },
-    { ai_prefix .. "M", "<cmd>CodeCompanion /commit-push<cr>", desc = "Code Companion - Commit and push" },
-  },
-
-  -- AutoSession keymaps
-  {
-    mode = { "n" },
-    { "<leader>qa", "<cmd>AutoSession toggle<CR>", desc = "Toggle autosave" },
-    { "<leader>qd", "<cmd>AutoSession deletePicker<CR>", desc = "Session delete" },
-    { "<leader>qk", "<cmd>AutoSession save<CR>", desc = "Save session" },
-    { "<leader>qs", "<cmd>AutoSession restore<CR>", desc = "Session restore" },
-    { "<leader>qS", "<cmd>AutoSession search<CR>", desc = "Session search" },
-  },
-
-  -- TMUX Navigation keymaps
-  {
-    mode = { "n" },
-    { "<c-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Navigate to left Tmux pane" },
-    { "<c-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Navigate to down Tmux pane" },
-    { "<c-k>", "<cmd>TmuxNavigateUp<cr>", desc = "Navigate to up Tmux pane" },
-    { "<c-l>", "<cmd>TmuxNavigateRight<cr>", desc = "Navigate to right Tmux pane" },
-    { "<c-\\>", "<cmd>TmuxNavigatePrevious<cr>", desc = "Navigate to previous Tmux pane" },
-  },
+  { "<leader>o", group = "Obsidian", icon = { icon = "🔮", hl = "" } },
+  { "<leader>a", group = "AI Code Companion", icon = { icon = "🤖", hl = "" } },
+  { "<leader>b", group = "Buffer", icon = { icon = "󰈔", hl = "" } },
+  { "<leader>c", group = "Code", icon = { icon = "👨‍💻", hl = "" } },
+  { "<leader>d", group = "Debug", icon = { icon = "🪲", hl = "" } },
+  { "<leader>f", group = "File/Find", icon = { icon = "🔍", hl = "" } },
+  { "<leader>g", group = "Git", icon = { icon = "󰊢 ", hl = "" } },
+  { "<leader>q", group = "Quit/Session", icon = { icon = "💾", hl = "" } },
+  { "<leader>s", group = "Search", icon = { icon = "🔍", hl = "" } },
+  { "<leader>u", group = "UI", icon = { icon = "󰙵 ", hl = "" } },
+  { "<leader>w", group = "Windows", icon = { icon = "🪟", hl = "" } },
+  { "<leader>x", group = "Diagnostics/Quickfix", icon = { icon = "󱖫 ", hl = "" } },
+  { "<leader><tab>", group = "Tabs", icon = { icon = "󰓩 ", hl = "" } },
+  { "<leader>m", group = "Marks", icon = { icon = "📍", hl = "" } },
 })
