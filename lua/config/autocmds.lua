@@ -149,16 +149,3 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
   end,
 })
-
---------------------------------------------------------------------------------
--- Lazy Loading
---------------------------------------------------------------------------------
--- Load keymaps and utils lazily after plugins
-vim.api.nvim_create_autocmd("User", {
-  group = augroup("lazy_load"),
-  pattern = "VeryLazy",
-  callback = function()
-    require("config.keymaps")
-    require("util")
-  end,
-})

@@ -24,9 +24,6 @@ vim.opt.rtp:prepend(lazypath)
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    -- MIGRATION: LazyVim removed - all plugins now explicit
-    -- To revert, uncomment the line below and comment out { import = "plugins" }
-    -- { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "plugins" },
   },
   install = { colorscheme = { "gruvbox" } },
@@ -47,3 +44,6 @@ require("lazy").setup({
     },
   },
 })
+
+-- Load keymaps
+require("config.keymaps")

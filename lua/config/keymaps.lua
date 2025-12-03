@@ -222,6 +222,7 @@ wk.add({
   { "<leader>w", group = "Windows" },
   { "<leader>x", group = "Diagnostics/Quickfix" },
   { "<leader><tab>", group = "Tabs" },
+  { "<leader>m", group = "Marks", icon = "📍" },
 
   -- CodeCompanion keymaps
   {
@@ -278,15 +279,6 @@ wk.add({
     mode = { "n" },
     { ai_prefix .. "m", "<cmd>CodeCompanion /commit<cr>", desc = "Code Companion - Git commit message" },
     { ai_prefix .. "M", "<cmd>CodeCompanion /commit-push<cr>", desc = "Code Companion - Commit and push" },
-  },
-
-  -- Marks keymaps
-  {
-    mode = { "n" },
-    { "<leader>m", group = "Marks", icon = "📍" },
-    { "<leader>mm", desc = "List marks" },
-    { "<leader>md", desc = "Delete mark" },
-    { "<leader>mD", desc = "Delete all marks" },
   },
 
   -- AutoSession keymaps
