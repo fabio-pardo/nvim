@@ -5,7 +5,7 @@ local SPINNER = require("plugins.codecompanion.spinner")
 
 return {
   "olimorris/codecompanion.nvim",
-  version = "v17.33.0", -- recommended, use latest release instead of latest commit
+  version = "v18.2.1", -- recommended, use latest release instead of latest commit
   config = function()
     SPINNER()
     require("codecompanion").setup(OPTS)

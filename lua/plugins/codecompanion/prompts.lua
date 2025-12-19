@@ -9,7 +9,7 @@ local ROLE = {
   LLM = "llm",
 }
 
-local STRATEGY = {
+local INTERACTION = {
   CHAT = "chat",
   WORKFLOW = "workflow",
 }
@@ -69,11 +69,11 @@ M.PROMPT_LIBRARY = {
   -- Chat Prompts
   -------------------------------------------------
   ["Generate a Commit Message"] = {
-    strategy = STRATEGY.CHAT,
+    interaction = INTERACTION.CHAT,
     description = "Generate a commit message for staged changes",
     opts = {
       is_slash_cmd = true,
-      short_name = "commit",
+      alias = "commit",
       auto_submit = true,
       adapter = {
         name = "copilot",
@@ -110,14 +110,15 @@ M.PROMPT_LIBRARY = {
   -- Workflows
   -------------------------------------------------
   ["Commit and Push"] = {
-    strategy = STRATEGY.WORKFLOW,
+    interaction = INTERACTION.WORKFLOW,
     description = "Generate commit message, commit, and push in one go",
     opts = {
-      short_name = "commit-push",
+      alias = "commit-push",
       adapter = {
         name = "copilot",
         model = "gpt-4o",
       },
+      is_workflow = true,
     },
     prompts = {
       -- Step 1: Generate the commit message

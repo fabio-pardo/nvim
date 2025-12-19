@@ -26,6 +26,9 @@ local OPTS = {
             model = {
               default = GEMINI_DEFAULT_MODEL,
             },
+            reasoning_effort = {
+              default = "high",
+            },
           },
         })
       end,
@@ -124,7 +127,7 @@ local OPTS = {
         },
 
         -- Memory system (requires VectorCode CLI)
-        memory = {
+        rules = {
           -- Automatically index summaries when they are generated
           auto_create_memories_on_summary_generation = true,
           -- Path to the VectorCode executable
@@ -191,10 +194,28 @@ local OPTS = {
       },
     },
   },
-  memory = {
+  rules = {
+    default = {
+      description = "Collection of common files for all projects",
+      files = {
+        ".clinerules",
+        ".cursorrules",
+        ".goosehints",
+        ".rules",
+        ".windsurfrules",
+        ".github/copilot-instructions.md",
+        "AGENT.md",
+        "AGENTS.md",
+        { path = "CLAUDE.md", parser = "claude" },
+        { path = "CLAUDE.local.md", parser = "claude" },
+        { path = "~/.claude/CLAUDE.md", parser = "claude" },
+      },
+      is_preset = true,
+    },
     opts = {
       chat = {
         enabled = true,
+        default_rules = "default", -- The rule groups to load
       },
     },
   },
@@ -204,7 +225,7 @@ local OPTS = {
     log_level = "DEBUG",
   },
   prompt_library = PROMPTS.PROMPT_LIBRARY,
-  strategies = {
+  interactions = {
     chat = {
       adapter = ADAPTER,
       keymaps = {
