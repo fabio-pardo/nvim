@@ -29,16 +29,16 @@ return {
     legacy_commands = false,
     workspaces = {
       {
-        name = "old_notes",
-        path = "~/vaults/notes",
+        -- name = "old_notes",
+        -- path = "~/vaults/notes",
       },
       {
         name = "personal",
-        path = "~/vaults/my_vault",
+        path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/my_vault",
       },
       {
         name = "qued",
-        path = "~/vaults/qued",
+        path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/qued",
         overrides = {
           daily_notes = {
             workdays_only = true,
@@ -47,7 +47,7 @@ return {
       },
       {
         name = "vv",
-        path = "~/vaults/vv",
+        path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/vv",
         overrides = {
           daily_notes = {
             workdays_only = true,
