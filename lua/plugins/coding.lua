@@ -17,6 +17,13 @@ return {
       markdown = true,
     },
   },
+  {
+    "nvim-mini/mini.surround",
+    version = "*",
+    config = function()
+      require("mini.surround").setup()
+    end,
+  },
 
   -- Better comment syntax for multiple comment types
   {

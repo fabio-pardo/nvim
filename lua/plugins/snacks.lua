@@ -36,6 +36,19 @@ return {
           hidden = true,
           ignored = true,
         },
+        explorer = {
+          win = {
+            list = {
+              keys = {
+                ["<C-h>"] = false,
+                ["<C-j>"] = false,
+                ["<C-k>"] = false,
+                ["<C-l>"] = false,
+                ["<C-\\>"] = false,
+              },
+            },
+          },
+        },
       },
     },
     notifier = { enabled = true },
