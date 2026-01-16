@@ -1,5 +1,5 @@
 ---@diagnostic disable: undefined-doc-name
-local ADAPTER = "gemini"
+local ADAPTER = "claude_code"
 local GEMINI_DEFAULT_MODEL = "gemini-3-pro-preview"
 local COPILOT_DEFAULT_MODEL = GEMINI_DEFAULT_MODEL
 
@@ -7,6 +7,15 @@ local PROMPTS = require("plugins.codecompanion.prompts")
 
 local OPTS = {
   adapters = {
+    acp = {
+      claude_code = function()
+        return require("codecompanion.adapters").extend("claude_code", {
+          env = {
+            CLAUDE_CODE_OAUTH_TOKEN = "cmd:op read op://personal/ClaudeCode/credential --no-newline",
+          },
+        })
+      end,
+    },
     http = {
       copilot = function()
         return require("codecompanion.adapters").extend("copilot", {
